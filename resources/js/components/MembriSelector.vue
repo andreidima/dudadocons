@@ -4,11 +4,12 @@
         <!-- <div class="col-lg-6 mb-4" style="position: relative;" v-click-out="hideAutocomplete"> -->
         <div class="col-lg-6" style="position: relative;" v-click-out="hideAutocomplete">
             <!-- Label (optional) -->
-            <label class="mb-0 ps-3"><b>Caută membri</b></label>
+            <label class="mb-0 ps-3" for="cautaMembri"><b>Caută membri</b></label>
 
             <!-- The Input Group for Searching -->
             <div class="input-group">
             <input
+                id="cautaMembri"
                 ref="searchInput"
                 type="text"
                 class="form-control bg-white rounded-3"
@@ -49,7 +50,7 @@
         </div>
         <div class="col-lg-6">
             <!-- Selected Membri List (2nd list) -->
-            <label class="mb-0 ps-3"><b>Membri adăugați</b></label>
+            <label class="mb-0 ps-3" for="cautaMembri"><b>Membri adăugați</b></label>
             <div class="">
             <table class="table table-sm mb-0">
                 <tbody>

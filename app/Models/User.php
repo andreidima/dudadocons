@@ -22,6 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'activ',
+        'role',
+        'telefon',
     ];
 
     /**
@@ -46,5 +48,14 @@ class User extends Authenticatable
             'password' => 'hashed',
             'activ' => 'boolean',
         ];
+    }
+
+    public function path($action = 'show')
+    {
+        return match ($action) {
+            'edit' => route('users.edit', $this->id),
+            'destroy' => route('users.destroy', $this->id),
+            default => route('users.show', $this->id),
+        };
     }
 }

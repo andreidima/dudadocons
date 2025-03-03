@@ -5,6 +5,7 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('prenume') ? 'is-invalid' : '' }}"
             name="prenume"
+            id="prenume"
             value="{{ old('prenume', $preFilledFields['prenume'] ?? $membru->prenume ?? '') }}"
             required>
     </div>
@@ -15,6 +16,7 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('nume') ? 'is-invalid' : '' }}"
             name="nume"
+            id="nume"
             value="{{ old('nume', $preFilledFields['nume'] ?? $membru->nume ?? '') }}"
             required>
     </div>
@@ -25,8 +27,9 @@
             type="email"
             class="form-control bg-white rounded-3 {{ $errors->has('email') ? 'is-invalid' : '' }}"
             name="email"
-            value="{{ old('email', $preFilledFields['email'] ?? $membru->email ?? '') }}"
-            required>
+            id="email"
+            autocomplete="email"
+            value="{{ old('email', $preFilledFields['email'] ?? $membru->email ?? '') }}">
     </div>
 
     <div class="col-lg-6 mb-4">
@@ -35,6 +38,7 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('telefon') ? 'is-invalid' : '' }}"
             name="telefon"
+            id="telefon"
             value="{{ old('telefon', $preFilledFields['telefon'] ?? $membru->telefon ?? '') }}">
     </div>
 
@@ -44,6 +48,7 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('functie') ? 'is-invalid' : '' }}"
             name="functie"
+            id="functie"
             value="{{ old('functie', $preFilledFields['functie'] ?? $membru->functie ?? '') }}">
     </div>
 
@@ -53,6 +58,7 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('departament') ? 'is-invalid' : '' }}"
             name="departament"
+            id="departament"
             value="{{ old('departament', $preFilledFields['departament'] ?? $membru->departament ?? '') }}">
     </div>
 
@@ -62,7 +68,16 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('adresa') ? 'is-invalid' : '' }}"
             name="adresa"
+            id="adresa"
             value="{{ old('adresa', $preFilledFields['adresa'] ?? $membru->adresa ?? '') }}">
+    </div>
+
+    <div class="col-lg-12 mb-4">
+        <label for="observatii" class="mb-0 ps-3">Observații</label>
+        <textarea
+            class="form-control bg-white rounded-3"
+            id="observatii"
+            rows="5">{{ old('observatii', $subcontractant->observatii ?? '') }}</textarea>
     </div>
 </div>
 

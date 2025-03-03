@@ -6,7 +6,8 @@
             type="text"
             class="form-control bg-white rounded-3 {{ $errors->has('nume') ? 'is-invalid' : '' }}"
             name="nume"
-            value="{{ old('nume', $preFilledFields['nume'] ?? $subcontractant->nume ?? '') }}"
+            id="nume"
+            value="{{ old('nume', $subcontractant->nume ?? '') }}"
             required>
     </div>
 
@@ -16,7 +17,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="tip"
-            value="{{ old('tip', $preFilledFields['tip'] ?? $subcontractant->tip ?? '') }}">
+            id="tip"
+            value="{{ old('tip', $subcontractant->tip ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -25,7 +27,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="numar_inregistrare"
-            value="{{ old('numar_inregistrare', $preFilledFields['numar_inregistrare'] ?? $subcontractant->numar_inregistrare ?? '') }}">
+            id="numar_inregistrare"
+            value="{{ old('numar_inregistrare', $subcontractant->numar_inregistrare ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -34,7 +37,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="cod_fiscal"
-            value="{{ old('cod_fiscal', $preFilledFields['cod_fiscal'] ?? $subcontractant->cod_fiscal ?? '') }}">
+            id="cod_fiscal"
+            value="{{ old('cod_fiscal', $subcontractant->cod_fiscal ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -43,7 +47,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="status"
-            value="{{ old('status', $preFilledFields['status'] ?? $subcontractant->status ?? '') }}">
+            id="status"
+            value="{{ old('status', $subcontractant->status ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -52,7 +57,9 @@
             type="email"
             class="form-control bg-white rounded-3"
             name="email"
-            value="{{ old('email', $preFilledFields['email'] ?? $subcontractant->email ?? '') }}">
+            id="email"
+            autocomplete="email"
+            value="{{ old('email', $subcontractant->email ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -61,7 +68,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="telefon"
-            value="{{ old('telefon', $preFilledFields['telefon'] ?? $subcontractant->telefon ?? '') }}">
+            id="telefon"
+            value="{{ old('telefon', $subcontractant->telefon ?? '') }}">
     </div>
 </div>
 
@@ -72,7 +80,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="adresa"
-            value="{{ old('adresa', $preFilledFields['adresa'] ?? $subcontractant->adresa ?? '') }}">
+            id="adresa"
+            value="{{ old('adresa', $subcontractant->adresa ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -81,7 +90,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="oras"
-            value="{{ old('oras', $preFilledFields['oras'] ?? $subcontractant->oras ?? '') }}">
+            id="oras"
+            value="{{ old('oras', $subcontractant->oras ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -90,7 +100,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="cod_postal"
-            value="{{ old('cod_postal', $preFilledFields['cod_postal'] ?? $subcontractant->cod_postal ?? '') }}">
+            id="cod_postal"
+            value="{{ old('cod_postal', $subcontractant->cod_postal ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -99,13 +110,15 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="tara"
-            value="{{ old('tara', $preFilledFields['tara'] ?? $subcontractant->tara ?? '') }}">
+            id="tara"
+            value="{{ old('tara', $subcontractant->tara ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4 text-center">
         <label for="data_inceput_contract" class="mb-0 ps-0">Data Început Contract</label>
         <vue-datepicker-next
-            data-veche="{{ old('data_inceput_contract', $subcontractant->data_inceput_contract) ?? null }}"
+            id="data_inceput_contract"
+            data-veche="{{ old('data_inceput_contract', $subcontractant->data_inceput_contract ?? null) }}"
             nume-camp-db="data_inceput_contract"
             tip="date"
             value-type="YYYY-MM-DD"
@@ -117,6 +130,7 @@
     <div class="col-lg-2 mb-4 text-center">
         <label for="data_sfarsit_contract" class="mb-0 ps-0">Data Sfârșit Contract</label>
         <vue-datepicker-next
+            id="data_sfarsit_contract"
             data-veche="{{ old('data_sfarsit_contract', $subcontractant->data_sfarsit_contract ?? null) }}"
             nume-camp-db="data_sfarsit_contract"
             tip="date"
@@ -132,7 +146,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="tarif_orar"
-            value="{{ old('tarif_orar', $preFilledFields['tarif_orar'] ?? $subcontractant->tarif_orar ?? '') }}">
+            id="tarif_orar"
+            value="{{ old('tarif_orar', $subcontractant->tarif_orar ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -141,7 +156,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="pret_fix"
-            value="{{ old('pret_fix', $preFilledFields['pret_fix'] ?? $subcontractant->pret_fix ?? '') }}">
+            id="pret_fix"
+            value="{{ old('pret_fix', $subcontractant->pret_fix ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -150,7 +166,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="moneda"
-            value="{{ old('moneda', $preFilledFields['moneda'] ?? $subcontractant->moneda ?? '') }}">
+            id="moneda"
+            value="{{ old('moneda', $subcontractant->moneda ?? '') }}">
     </div>
 </div>
 
@@ -161,7 +178,8 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="conditii_plata"
-            value="{{ old('conditii_plata', $preFilledFields['conditii_plata'] ?? $subcontractant->conditii_plata ?? '') }}">
+            id="conditii_plata"
+            value="{{ old('conditii_plata', $subcontractant->conditii_plata ?? '') }}">
     </div>
 
     <div class="col-lg-6 mb-4">
@@ -170,15 +188,16 @@
             type="text"
             class="form-control bg-white rounded-3"
             name="specializare"
-            value="{{ old('specializare', $preFilledFields['specializare'] ?? $subcontractant->specializare ?? '') }}">
+            id="specializare"
+            value="{{ old('specializare', $subcontractant->specializare ?? '') }}">
     </div>
 
     <div class="col-lg-12 mb-4">
         <label for="observatii" class="mb-0 ps-3">Observații</label>
         <textarea
             class="form-control bg-white rounded-3"
-            name="observatii"
-            rows="3">{{ old('observatii', $preFilledFields['observatii'] ?? $subcontractant->observatii ?? '') }}</textarea>
+            id="observatii"
+            rows="5">{{ old('observatii', $subcontractant->observatii ?? '') }}</textarea>
     </div>
 </div>
 

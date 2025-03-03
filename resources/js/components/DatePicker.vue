@@ -8,6 +8,7 @@ import 'vue-datepicker-next/index.css';
 export default {
   components: { DatePicker },
   props: [
+    'id',
     'dataVeche',
     'numeCampDb',
     'zileNelucratoare',
@@ -153,9 +154,10 @@ export default {
 
 <template>
   <div>
-    <input type="text" :name=numeCampDb v-model="time" v-show="false">
+    <input type="text" :id=id :name=numeCampDb v-model="time" v-show="false">
     <date-picker
         v-model:value="time"
+        :id="id"
         :type=tip
         :value-type=valueType
         :format=format

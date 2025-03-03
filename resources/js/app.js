@@ -12,6 +12,8 @@ import { clickOutside } from './directives/clickOut';
 import VueDatepickerNext from './components/DatePicker.vue';
 import MembriSelector from './components/MembriSelector.vue';
 import SubcontractantiSelector from './components/SubcontractantiSelector.vue';
+import DisableOnceButton from './components/DisableOnceButton.vue';
+
 
 // App pentru DatePicker
 const datePicker = createApp({});
@@ -34,3 +36,8 @@ if (document.getElementById('subcontractantiSelectorApp') !== null) {
     subcontractantiSelectorApp.mount('#subcontractantiSelectorApp');
 }
 
+const sendEmailModals = createApp({});
+sendEmailModals.component('disable-once-button', DisableOnceButton);
+if (document.getElementById('sendEmailModals') !== null) {
+    sendEmailModals.mount('#sendEmailModals');
+}

@@ -35,20 +35,85 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item me-3">
-                            <a class="nav-link rounded-3 {{ request()->routeIs('proiecte.index') ? 'shadow shadow-light' : 'text-white' }}" href="{{ route('proiecte.index') }}">
-                                <i class="fa-solid fa-folder-open me-1"></i> Proiecte
+                        <li class="nav-item me-3 dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-folder-open"></i> Proiecte
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'civile']) }}">
+                                        <i class="fa-solid fa-building me-1"></i> Civile
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'apa-canal']) }}">
+                                        <i class="fa-solid fa-tint me-1"></i> Apă canal
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'drumuri']) }}">
+                                        <i class="fa-solid fa-road me-1"></i> Drumuri
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'privati']) }}">
+                                        <i class="fa-solid fa-user-lock me-1"></i> Privați
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item me-3">
-                            <a class="nav-link rounded-3 {{ request()->routeIs('membri.index') ? 'shadow shadow-light' : 'text-white' }}" href="{{ route('membri.index') }}">
-                                <i class="fa-solid fa-user-group me-1"></i> Membri
+                        <li class="nav-item me-3 dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-briefcase"></i> Servicii
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'consultanta']) }}">
+                                        <i class="fa-solid fa-building me-1"></i> Consultanță
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'pug']) }}">
+                                        <i class="fa-solid fa-tint me-1"></i> PUG
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'achizitii']) }}">
+                                        <i class="fa-solid fa-road me-1"></i> Achiziții
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item me-3">
-                            <a class="nav-link rounded-3 {{ request()->routeIs('subcontractanti.index') ? 'shadow shadow-light' : 'text-white' }}" href="{{ route('subcontractanti.index') }}">
-                                <i class="fa-solid fa-handshake me-1"></i> Subcontractanți
+                        <li class="nav-item me-3 dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-cubes"></i> Resources
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('membri.index') }}">
+                                        <i class="fa-solid fa-user-group me-1"></i> Membri
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('subcontractanti.index') }}">
+                                        <i class="fa-solid fa-handshake me-1"></i> Subcontractanți
+                                    </a>
+                                </li>
+                                @can('admin-action')
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('users.index') }}">
+                                            <i class="fa-solid fa-users me-1"></i> Utilizatori
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
                         </li>
                     </ul>
 
@@ -62,11 +127,11 @@
                                 </li>
                             @endif
 
-                            @if (Route::has('register'))
+                            {{-- @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
-                            @endif
+                            @endif --}}
                         @else
                             <li class="nav-item dropdown me-3">
                                 <a class="nav-link dropdown-toggle rounded-3 {{ request()->routeIs('profile.*') ? 'active culoare2' : 'text-white' }}"

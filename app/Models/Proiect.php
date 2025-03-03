@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Proiect extends Model
 {
@@ -19,11 +20,17 @@ class Proiect extends Model
 
     public function path($action = 'show')
     {
+        $tipSlug = $this->tipProiect->slug;
         return match ($action) {
-            'edit' => route('proiecte.edit', $this->id),
-            'destroy' => route('proiecte.destroy', $this->id),
-            default => route('proiecte.show', $this->id),
+            'edit' => route('proiecte.edit', ['tipProiect' => $tipSlug, 'proiect' => $this->id]),
+            'destroy' => route('proiecte.destroy', ['tipProiect' => $tipSlug, 'proiect' => $this->id]),
+            default => route('proiecte.show', ['tipProiect' => $tipSlug, 'proiect' => $this->id]),
         };
+    }
+
+    public function tipProiect()
+    {
+        return $this->belongsTo(ProiectTip::class, 'proiecte_tipuri_id');
     }
 
     public function membri()
@@ -39,5 +46,23 @@ class Proiect extends Model
     public function fisiere()
     {
         return $this->morphMany(Fisier::class, 'owner');
+    }
+
+    /**
+     * Get all of the emailuriTrimise for the Proiect
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function emailuriTrimise(): HasMany
+    {
+        return $this->hasMany(ProiectEmailTrimis::class, 'proiect_id');
+    }
+
+    public function emailuriTrimiseCountForRecipient($destinatarId, $destinatarType)
+    {
+        return $this->emailuriTrimise()
+                    ->where('destinatar_id', $destinatarId)
+                    ->where('destinatar_type', $destinatarType)
+                    ->count();
     }
 }

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Illuminate\Support\Facades\Auth;
 
-class CheckActiv
+class CheckUserActiv
 {
     /**
      * Handle an incoming request.
@@ -17,20 +17,9 @@ class CheckActiv
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check() && !auth()->user()->activ){
+        if (Auth::check() && Auth::user()->activ != 1) {
             Auth::logout();
-
-            $request->session()->invalidate();
-
-            $request->session()->regenerateToken();
-
-            // Prevent infinite redirect loop
-            if ($request->routeIs('login')) {
-                return $next($request);
-            }
-
             return redirect()->route('login')->with('error', 'Contul tău este suspendat. Contactează administratorul.');
-
         }
 
         return $next($request);

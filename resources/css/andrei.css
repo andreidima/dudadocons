@@ -43,14 +43,17 @@
 .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
-.nav-link.active {
+/* .nav-link.active {
     color: white !important;
     box-shadow: 0 1px 0px rgba(255, 255, 255, 1);
-        /* A subtle inner shadow */
-        border-radius: 5px;
-}
+    border-radius: 5px;
+} */
 .nav-link.dropdown-toggle:hover {
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 8px;
     transition: background-color 0.3s ease-in-out;
+}
+
+.preserve-newlines {
+    white-space: pre-wrap; /* preserves whitespace and wraps text */
 }

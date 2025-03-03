@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Membru;
+use App\Http\Requests\MembruRequest;
 use Carbon\Carbon;
 
 class MembruController extends Controller
@@ -30,7 +31,7 @@ class MembruController extends Controller
                 return $query->where('telefon', 'LIKE', "%{$searchTelefon}%");
             })
             ->latest()
-            ->simplePaginate(50);
+            ->simplePaginate(25);
 
         return view('membri.index', compact('membri', 'searchNume', 'searchTelefon'));
     }
@@ -55,9 +56,9 @@ class MembruController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MembruRequest $request)
     {
-        $data = $this->validateRequest($request);
+        $data = $request->validated();
 
         $membru = Membru::create($data);
 
@@ -97,9 +98,9 @@ class MembruController extends Controller
      * @param  \App\Membru  $membru
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Membru $membru)
+    public function update(MembruRequest $request, Membru $membru)
     {
-        $data = $this->validateRequest($request);
+        $data = $request->validated();
 
         $membru->update($data);
 
@@ -114,26 +115,12 @@ class MembruController extends Controller
      */
     public function destroy(Request $request, Membru $membru)
     {
+        if ($membru->proiecte()->exists()) {
+            return back()->with('error', 'Membrul nu poate fi șters deoarece este asociat cu unul sau mai multe proiecte.');
+        }
+
         $membru->delete();
 
         return back()->with('status', 'Membrul <strong>' . e($membru->prenume) . ' ' . e($membru->nume) . '</strong> a fost șters cu succes!');
-    }
-
-    /**
-     * Validate the request attributes.
-     *
-     * @return array
-     */
-    protected function validateRequest(Request $request)
-    {
-        return $request->validate([
-            'prenume' => 'required|string|max:100',
-            'nume' => 'required|string|max:100',
-            'email' => 'nullable|email|max:255',
-            'telefon' => 'nullable|string|max:100',
-            'adresa' => 'nullable|string|max:500',
-            'functie' => 'nullable|string|max:100',
-            'departament' => 'nullable|string|max:100',
-        ]);
     }
 }

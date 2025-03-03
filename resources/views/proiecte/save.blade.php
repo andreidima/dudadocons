@@ -17,7 +17,7 @@
                 <div class="card-body py-3 px-4 border border-secondary" style="border-radius: 0px 0px 40px 40px;">
                     <form class="needs-validation" novalidate
                         method="POST"
-                        action="{{ isset($proiect) ? route('proiecte.update', $proiect->id) : route('proiecte.store') }}">
+                        action="{{ isset($proiect) ? route('proiecte.update', ['tipProiect' => $tipProiect, 'proiect' => $proiect->id]) : route('proiecte.store', $tipProiect) }}">
                         @csrf
                         @if(isset($proiect))
                             @method('PUT')
