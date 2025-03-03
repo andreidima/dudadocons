@@ -21,14 +21,19 @@ class EmailController extends Controller
             'email_mesaj'   => 'required|string',
         ]);
 
-        // Send the email
-        Mail::to($validated['email_destinatar'])
-            ->send(new GenericEmail($validated['email_subiect'], $validated['email_mesaj']));
+        try {
+            // Send the email
+            Mail::to($validated['email_destinatar'])
+                ->send(new GenericEmail($validated['email_subiect'], $validated['email_mesaj']));
 
-        $proiectEmailTrimis = ProiectEmailTrimis::make($validated);
-        $proiectEmailTrimis->sent_at = Carbon::now();
-        $proiectEmailTrimis->save();
+            $proiectEmailTrimis = ProiectEmailTrimis::make($validated);
+            $proiectEmailTrimis->sent_at = Carbon::now();
+            $proiectEmailTrimis->save();
 
-        return redirect()->back()->with('success', 'Email trimis cu succes!');
+            return redirect()->back()->with('success', 'Email trimis cu succes!');
+        } catch (\Exception $e) {
+            // Optionally log the exception: Log::error($e);
+            return redirect()->back()->with('error', 'A apărut o problemă la trimiterea emailului. Te rog încearcă din nou mai târziu.');
+        }
     }
 }
