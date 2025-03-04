@@ -33,7 +33,7 @@ class EmailController extends Controller
             return redirect()->back()->with('success', 'Email trimis cu succes!');
         } catch (\Exception $e) {
             // Optionally log the exception: Log::error($e);
-            return redirect()->back()->with('error', 'A apărut o problemă la trimiterea emailului. Te rog încearcă din nou mai târziu.');
+            return redirect()->back()->with('error', 'A apărut o problemă la trimiterea emailului. Te rog încearcă din nou mai târziu.' . $e);
         }
     }
 }
