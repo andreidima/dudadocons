@@ -15,7 +15,7 @@ class ProiectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, $tipProiect)
+    public function index(Request $request,ProiectTip $proiectTip)
     {
         $request->session()->forget('returnUrl');
 
@@ -25,8 +25,8 @@ class ProiectController extends Controller
         $searchMembru = trim($request->searchMembru);
         $searchSubcontractant = trim($request->searchSubcontractant);
 
-        $proiecte = Proiect::with('tipProiect', 'membri', 'subcontractanti', 'fisiere', 'emailuriTrimise')
-            ->where('proiecte_tipuri_id', ProiectTip::where('slug', $tipProiect)->first()->id ?? null)
+        $proiecte = Proiect::with('proiectTip', 'membri', 'subcontractanti', 'fisiere', 'emailuriTrimise')
+            ->where('proiecte_tipuri_id', $proiectTip->id ?? null)
             ->when($searchDenumire, function ($query, $searchDenumire) {
                 $words = explode(' ', $searchDenumire);
                 return $query->where(function ($q) use ($words) {
@@ -57,13 +57,13 @@ class ProiectController extends Controller
             ->latest()
             ->simplePaginate(25);
 
-        return view('proiecte.index', compact('tipProiect', 'proiecte', 'searchDenumire', 'searchNrContract', 'searchIntervalDataContract', 'searchMembru', 'searchSubcontractant'));
+        return view('proiecte.index', compact('proiectTip', 'proiecte', 'searchDenumire', 'searchNrContract', 'searchIntervalDataContract', 'searchMembru', 'searchSubcontractant'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request, $tipProiect)
+    public function create(Request $request,ProiectTip  $proiectTip)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
@@ -79,13 +79,13 @@ class ProiectController extends Controller
         $allSubcontractanti = Subcontractant::select('id','nume')->get();
         $existingSubcontractanti = []; // empty array
 
-        return view('proiecte.save', compact('tipProiect', 'allMembri', 'existingMembri', 'allSubcontractanti', 'existingSubcontractanti'));
+        return view('proiecte.save', compact('proiectTip', 'allMembri', 'existingMembri', 'allSubcontractanti', 'existingSubcontractanti'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProiectRequest $request, $tipProiect)
+    public function store(ProiectRequest $request,ProiectTip $proiectTip)
     {
         $data = $request->safe()->except(['membri_ids', 'subcontractanti_ids']);
         $proiect = Proiect::create($data);
@@ -97,21 +97,21 @@ class ProiectController extends Controller
         $proiect->membri()->sync($membriIds);
         $proiect->subcontractanti()->sync($subcontractantiIds);
 
-        return redirect($request->session()->get('returnUrl', route('proiecte.index', $tipProiect)))
+        return redirect($request->session()->get('returnUrl', route('proiecte.index', $proiectTip)))
             ->with('success', 'Proiectul <strong>' . e($proiect->denumire_contract) . '</strong> a fost adăugat cu succes!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, $tipProiect, Proiect $proiect)
+    public function show(Request $request,ProiectTip $proiectTip, Proiect $proiect)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
-        return view('proiecte.show', compact('tipProiect', 'proiect'));
+        return view('proiecte.show', compact('proiectTip', 'proiect'));
     }
 
-    public function showEmailuri(Request $request, $tipProiect, $proiect, $destinatar_type, $destinatar_id)
+    public function showEmailuri(Request $request,ProiectTip $proiectTip, $proiect, $destinatar_type, $destinatar_id)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
@@ -125,13 +125,13 @@ class ProiectController extends Controller
             ->orderBy('sent_at', 'desc')
             ->get();
 
-        return view('proiecte.showEmailuri', compact('tipProiect', 'proiect', 'emailuri', 'destinatar_type', 'destinatar_id'));
+        return view('proiecte.showEmailuri', compact('proiectTip', 'proiect', 'emailuri', 'destinatar_type', 'destinatar_id'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, $tipProiect, Proiect $proiect)
+    public function edit(Request $request,ProiectTip $proiectTip, Proiect $proiect)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
@@ -157,13 +157,13 @@ class ProiectController extends Controller
             ->select('subcontractanti.id', 'subcontractanti.nume') // note the table name
             ->get();
 
-        return view('proiecte.save', compact('tipProiect', 'proiect', 'allMembri', 'existingMembri', 'allSubcontractanti', 'existingSubcontractanti'));
+        return view('proiecte.save', compact('proiectTip', 'proiect', 'allMembri', 'existingMembri', 'allSubcontractanti', 'existingSubcontractanti'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProiectRequest $request, $tipProiect, Proiect $proiect)
+    public function update(ProiectRequest $request,ProiectTip $proiectTip, Proiect $proiect)
     {
         $data = $request->safe()->except(['membri_ids', 'subcontractanti_ids']);
         $proiect->update($data);
@@ -175,14 +175,14 @@ class ProiectController extends Controller
         $proiect->membri()->sync($membriIds);
         $proiect->subcontractanti()->sync($subcontractantiIds);
 
-        return redirect($request->session()->get('returnUrl', route('proiecte.index', $tipProiect)))
+        return redirect($request->session()->get('returnUrl', route('proiecte.index', $proiectTip)))
             ->with('status', 'Proiectul <strong>' . e($proiect->denumire_contract) . '</strong> a fost modificat cu succes!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, $tipProiect, Proiect $proiect)
+    public function destroy(Request $request,ProiectTip $proiectTip, Proiect $proiect)
     {
         // Check if the project has any attached files
         if ($proiect->fisiere()->exists()) {

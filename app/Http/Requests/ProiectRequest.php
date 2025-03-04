@@ -67,9 +67,9 @@ class ProiectRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $slug = $this->route('tipProiect');
+        $proiectTip = $this->route('proiectTip');
         $this->merge([
-            'proiecte_tipuri_id' => ProiectTip::where('slug', $slug)->first()?->id ?? null,
+            'proiecte_tipuri_id' => $proiectTip->id ?? null,
         ]);
     }
 }

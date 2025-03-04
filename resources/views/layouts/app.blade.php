@@ -41,25 +41,25 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'civile']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'civile']) }}">
                                         <i class="fa-solid fa-building me-1"></i> Civile
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'apa-canal']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'apa-canal']) }}">
                                         <i class="fa-solid fa-tint me-1"></i> Apă canal
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'drumuri']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'drumuri']) }}">
                                         <i class="fa-solid fa-road me-1"></i> Drumuri
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'privati']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'privati']) }}">
                                         <i class="fa-solid fa-user-lock me-1"></i> Privați
                                     </a>
                                 </li>
@@ -71,19 +71,19 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'consultanta']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'consultanta']) }}">
                                         <i class="fa-solid fa-building me-1"></i> Consultanță
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'pug']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'pug']) }}">
                                         <i class="fa-solid fa-tint me-1"></i> PUG
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['tipProiect' => 'achizitii']) }}">
+                                    <a class="dropdown-item" href="{{ route('proiecte.index', ['proiectTip' => 'achizitii']) }}">
                                         <i class="fa-solid fa-road me-1"></i> Achiziții
                                     </a>
                                 </li>

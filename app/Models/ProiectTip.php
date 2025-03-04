@@ -12,4 +12,9 @@ class ProiectTip extends Model
 
     protected $table = 'proiecte_tipuri';
     protected $guarded = [];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

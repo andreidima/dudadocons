@@ -6,7 +6,7 @@
         <div class="col-lg-2">
             <span class="badge culoare1 fs-5">
                 <i class="fa-solid fa-envelope me-1"></i>
-                Proiect: {{ $proiect->denumire_contract }} - Emailuri trimise către:
+                {{ $proiectTip->nume }}: {{ $proiect->denumire_contract }} - Emailuri trimise către:
                 @if($destinatar_type === 'membru')
                     @php
                        $membru = App\Models\Membru::findOrFail($destinatar_id)
@@ -61,7 +61,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-4">
-            <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $tipProiect)) }}">
+            <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $proiectTip->slug )) }}">
                 <i class="fa-solid fa-arrow-left"></i> Înapoi
             </a>
         </div>

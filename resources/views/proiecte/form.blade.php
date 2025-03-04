@@ -77,9 +77,9 @@
     </div>
 </div>
 
-@if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
+@if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
     <div class="row gx-4 mb-4">
-        @if(in_array($tipProiect, ['civile', 'privati']))
+        @if(in_array($proiectTip->slug, ['civile', 'privati']))
             <div class="col-lg-6 ps-0">
                 <!-- Where we mount our MembriSelector Vue app -->
                 <div id="membriSelectorApp" class="pt-2 pb-4 px-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
@@ -92,7 +92,7 @@
                 </div>
             </div>
         @endif
-        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
+        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
             <div class="col-lg-6 px-0">
                 <!-- Where we mount our SubcontractantiSelector Vue app -->
                 <div id="subcontractantiSelectorApp" class="pt-2 px-2 pb-4 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:rgb(241, 250, 250)">
@@ -109,7 +109,7 @@
 @endif
 
 <div id="datePicker" class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem darkcyan solid; background-color:rgb(241, 250, 250)">
-    @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="cu" class="mb-0 ps-3">CU</label>
             <input
@@ -121,7 +121,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['apa-canal', 'drumuri', 'privati']))
+    @if(in_array($proiectTip->slug, ['apa-canal', 'drumuri', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="nr_proiect" class="mb-0 ps-3">Nr. proiect</label>
             <input
@@ -133,7 +133,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="studii_teren" class="mb-0 ps-3">Studii Teren</label>
             <textarea
@@ -144,7 +144,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="avize" class="mb-0 ps-3">Avize</label>
             <textarea
@@ -155,7 +155,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="faza" class="mb-0 ps-3">FAZA</label>
             <textarea
@@ -166,7 +166,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="arhitectura" class="mb-0 ps-3">Arhitectură</label>
             <textarea
@@ -177,7 +177,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'apa-canal', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="rezistenta" class="mb-0 ps-3">Rezistență</label>
             <textarea
@@ -188,7 +188,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="instalatii" class="mb-0 ps-3">Instalații</label>
             <textarea
@@ -199,7 +199,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['apa-canal']))
+    @if(in_array($proiectTip->slug, ['apa-canal']))
         <div class="col-lg-6 mb-4">
             <label for="tratare" class="mb-0 ps-3">Tratare</label>
             <textarea
@@ -210,7 +210,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['apa-canal']))
+    @if(in_array($proiectTip->slug, ['apa-canal']))
         <div class="col-lg-6 mb-4">
             <label for="retele" class="mb-0 ps-3">Rețele</label>
             <textarea
@@ -221,7 +221,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['drumuri']))
+    @if(in_array($proiectTip->slug, ['drumuri']))
         <div class="col-lg-6 mb-4">
             <label for="partea_desenata" class="mb-0 ps-3">Partea desenată</label>
             <textarea
@@ -232,7 +232,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['drumuri']))
+    @if(in_array($proiectTip->slug, ['drumuri']))
         <div class="col-lg-6 mb-4">
             <label for="partea_scrisa" class="mb-0 ps-3">Partea scrisă</label>
             <textarea
@@ -243,7 +243,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="partea_economica" class="mb-0 ps-3">Partea Economică</label>
             <textarea
@@ -254,7 +254,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['civile', 'privati']))
+    @if(in_array($proiectTip->slug, ['civile', 'privati']))
         <div class="col-lg-6 mb-4">
             <label for="autorizatie_de_construire" class="mb-0 ps-3">Autorizație de Construire</label>
             <textarea
@@ -265,7 +265,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['achizitii']))
+    @if(in_array($proiectTip->slug, ['achizitii']))
         <div class="col-lg-6 mb-4">
             <label for="documentatie_eligibilitate" class="mb-0 ps-3">Documentație eligibilitate</label>
             <textarea
@@ -276,7 +276,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['achizitii']))
+    @if(in_array($proiectTip->slug, ['achizitii']))
         <div class="col-lg-6 mb-4">
             <label for="personal" class="mb-0 ps-3">Personal</label>
             <textarea
@@ -287,7 +287,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['achizitii']))
+    @if(in_array($proiectTip->slug, ['achizitii']))
         <div class="col-lg-6 mb-4">
             <label for="formulare" class="mb-0 ps-3">Formulare</label>
             <textarea
@@ -298,7 +298,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['achizitii']))
+    @if(in_array($proiectTip->slug, ['achizitii']))
         <div class="col-lg-6 mb-4">
             <label for="propunere_tehnica" class="mb-0 ps-3">Propunere tehnică</label>
             <textarea
@@ -309,7 +309,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['achizitii']))
+    @if(in_array($proiectTip->slug, ['achizitii']))
         <div class="col-lg-6 mb-4">
             <label for="propunere_financiara" class="mb-0 ps-3">Propunere financiară</label>
             <textarea
@@ -320,7 +320,7 @@
         </div>
     @endif
 
-    @if(in_array($tipProiect, ['achizitii']))
+    @if(in_array($proiectTip->slug, ['achizitii']))
         <div class="col-lg-6 mb-4">
             <label for="stadiu_incarcare" class="mb-0 ps-3">Stadiu încărcare</label>
             <textarea
@@ -346,7 +346,7 @@
         <button type="submit" class="btn btn-primary text-white me-3 rounded-3">
             <i class="fa-solid fa-save me-1"></i> {{ $buttonText }}
         </button>
-        <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $tipProiect)) }}">
+        <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $proiectTip->slug)) }}">
             Renunță
         </a>
     </div>

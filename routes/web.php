@@ -23,7 +23,7 @@ Route::middleware(['auth', 'checkUserActiv'])->group(function () {
     Route::resource('subcontractanti', SubcontractantController::class)->parameters(['subcontractanti' => 'subcontractant']);
 
     Route::group([
-        'prefix' => 'proiecte/{tipProiect}',
+        'prefix' => 'proiecte/{proiectTip}',
         'as' => 'proiecte.'
     ], function () {
         Route::get('{proiect}/emailuri/{destinatar_type}/{destinatar_id}', [ProiectController::class, 'showEmailuri'])

@@ -5,7 +5,7 @@
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
         <div class="col-lg-2">
             <span class="badge culoare1 fs-5">
-                <i class="fa-solid fa-folder me-1"></i> Proiecte
+                <i class="fa-solid fa-folder me-1"></i> {{ $proiectTip->nume }}
             </span>
         </div>
 
@@ -33,12 +33,12 @@
                     <div class="col-lg-4">
                         <input type="text" class="form-control rounded-3" id="searchNrContract" name="searchNrContract" placeholder="Nr. Contract" value="{{ $searchNrContract }}">
                     </div>
-                    @if(in_array($tipProiect, ['civile', 'privati']))
+                    @if(in_array($proiectTip->slug, ['civile', 'privati']))
                         <div class="col-lg-4">
                             <input type="text" class="form-control rounded-3" id="searchMembru" name="searchMembru" placeholder="Membru" value="{{ $searchMembru }}">
                         </div>
                     @endif
-                    @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
+                    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
                         <div class="col-lg-4">
                             <input type="text" class="form-control rounded-3" id="searchSubcontractant" name="searchSubcontractant" placeholder="Subcontractant" value="{{ $searchSubcontractant }}">
                         </div>
@@ -62,7 +62,7 @@
         {{-- Button to add new project --}}
         <div class="col-lg-2 text-end">
             <a class="btn btn-sm btn-success text-white border border-dark rounded-3 col-md-8" href="{{ url()->current() }}/adauga" role="button">
-                <i class="fas fa-plus-circle text-white me-1"></i> Adaugă Proiect
+                <i class="fas fa-plus-circle text-white me-1"></i> Adaugă înregistrare
             </a>
         </div>
     </div>
@@ -86,10 +86,10 @@
                             <br>
                             <i class="fa-solid fa-calendar-check"></i> Data limită predare
                         </th>
-                        @if(in_array($tipProiect, ['civile', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <th class="text-white culoare2"><i class="fa-solid fa-user-group"></i> Membri</th>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
                             <th class="text-white culoare2"><i class="fa-solid fa-handshake"></i> Subcontractanți</th>
                         @endif
                         <th class="text-white culoare2"><i class="fa-solid fa-calendar-check"></i> Fișiere</th>
@@ -109,7 +109,7 @@
                                 <br>
                                 {{ $proiect->data_limita_predare ?? '-' }}
                             </td>
-                            @if(in_array($tipProiect, ['civile', 'privati']))
+                            @if(in_array($proiectTip->slug, ['civile', 'privati']))
                                 <td>
                                     @if($proiect->membri->isNotEmpty())
                                         @foreach($proiect->membri as $membru)
@@ -130,7 +130,7 @@
                                                 @endphp
                                                 @if ($emailCount > 0)
                                                     <a href="{{ route('proiecte.show.emailuri', [
-                                                        'tipProiect' => $tipProiect,
+                                                        'proiectTip' => $proiectTip->slug,
                                                         'proiect' => $proiect->id,
                                                         'destinatar_type' => 'membru',
                                                         'destinatar_id' => $membru->id
@@ -144,7 +144,7 @@
                                     @endif
                                 </td>
                             @endif
-                            @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
+                            @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
                                 <td>
                                     @if($proiect->subcontractanti->isNotEmpty())
                                         @foreach($proiect->subcontractanti as $subcontractant)
@@ -164,7 +164,7 @@
                                                 @endphp
                                                 @if ($emailCount > 0)
                                                     <a href="{{ route('proiecte.show.emailuri', [
-                                                        'tipProiect' => $tipProiect,
+                                                        'proiectTip' => $proiectTip->slug,
                                                         'proiect' => $proiect->id,
                                                         'destinatar_type' => 'subcontractant',
                                                         'destinatar_id' => $subcontractant->id
@@ -209,7 +209,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="text-center text-muted py-3">
-                                <i class="fa-solid fa-exclamation-circle me-1"></i> Nu s-au găsit proiecte în baza de date.
+                                <i class="fa-solid fa-exclamation-circle me-1"></i> Nu s-au găsit înregistrări în baza de date.
                             </td>
                         </tr>
                     @endforelse
@@ -365,12 +365,12 @@ Alma Consulting</textarea>
             <div class="modal-content">
                 <div class="modal-header bg-danger">
                     <h5 class="modal-title text-white" id="stergeProiectLabel{{ $proiect->id }}">
-                        <i class="fa-solid fa-trash me-1"></i> Proiect: <b>{{ $proiect->denumire_contract }}</b>
+                        <i class="fa-solid fa-trash me-1"></i> {{ $proiectTip->nume }}: <b>{{ $proiect->denumire_contract }}</b>
                     </h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-start">
-                    Ești sigur că vrei să ștergi acest proiect?
+                    Ești sigur că vrei să ștergi această înregistrare?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
@@ -378,7 +378,7 @@ Alma Consulting</textarea>
                         @method('DELETE')
                         @csrf
                         <button type="submit" class="btn btn-danger text-white">
-                            <i class="fa-solid fa-trash me-1"></i> Șterge Proiect
+                            <i class="fa-solid fa-trash me-1"></i> Șterge
                         </button>
                     </form>
                 </div>

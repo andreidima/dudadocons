@@ -20,15 +20,15 @@ class Proiect extends Model
 
     public function path($action = 'show')
     {
-        $tipSlug = $this->tipProiect->slug;
+        $tipSlug = $this->proiectTip->slug;
         return match ($action) {
-            'edit' => route('proiecte.edit', ['tipProiect' => $tipSlug, 'proiect' => $this->id]),
-            'destroy' => route('proiecte.destroy', ['tipProiect' => $tipSlug, 'proiect' => $this->id]),
-            default => route('proiecte.show', ['tipProiect' => $tipSlug, 'proiect' => $this->id]),
+            'edit' => route('proiecte.edit', ['proiectTip' => $tipSlug, 'proiect' => $this->id]),
+            'destroy' => route('proiecte.destroy', ['proiectTip' => $tipSlug, 'proiect' => $this->id]),
+            default => route('proiecte.show', ['proiectTip' => $tipSlug, 'proiect' => $this->id]),
         };
     }
 
-    public function tipProiect()
+    public function proiectTip()
     {
         return $this->belongsTo(ProiectTip::class, 'proiecte_tipuri_id');
     }

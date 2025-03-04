@@ -7,7 +7,7 @@
             <div class="shadow-lg" style="border-radius: 40px;">
                 <div class="border border-secondary p-2 culoare2" style="border-radius: 40px 40px 0px 0px;">
                     <span class="badge text-light fs-5">
-                        <i class="fa-solid fa-folder me-1"></i> Detalii Proiect
+                        <i class="fa-solid fa-folder me-1"></i> Detalii
                     </span>
                 </div>
 
@@ -36,7 +36,7 @@
                         </div>
 
                         <!-- Membri Section -->
-                        @if(in_array($tipProiect, ['civile', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Membri</strong>
                                 @if($proiect->membri->isNotEmpty())
@@ -57,7 +57,7 @@
                         @endif
 
                         <!-- Subcontractanti Section -->
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
                             <div class="col-md-6 mb-3">
                                 <strong>Subcontractanti</strong>
                                 @if($proiect->subcontractanti->isNotEmpty())
@@ -77,120 +77,120 @@
                             </div>
                         @endif
 
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>CU:</strong> {{ $proiect->cu }}
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['apa-canal', 'drumuri', 'privati']))
+                        @if(in_array($proiectTip->slug, ['apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Nr. proiect:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->nr_proiect }} </span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Studii Teren:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->studii_teren }} </span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Avize:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->avize }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>FAZA:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->faza }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Arhitectură:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->arhitectura }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Rezistență:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->rezistenta }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Instalații:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->instalatii }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['apa-canal']))
+                        @if(in_array($proiectTip->slug, ['apa-canal']))
                             <div class="col-md-6 mb-3">
                                 <strong>Tratare:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->tratare }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['apa-canal']))
+                        @if(in_array($proiectTip->slug, ['apa-canal']))
                             <div class="col-md-6 mb-3">
                                 <strong>Rețele:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->retele }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['drumuri']))
+                        @if(in_array($proiectTip->slug, ['drumuri']))
                             <div class="col-md-6 mb-3">
                                 <strong>Partea desenată:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->partea_desenata }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['drumuri']))
+                        @if(in_array($proiectTip->slug, ['drumuri']))
                             <div class="col-md-6 mb-3">
                                 <strong>Partea scrisă:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->partea_scrisa }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'apa-canal', 'drumuri', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Partea Economică:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->partea_economica }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['civile', 'privati']))
+                        @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>Autorizație de Construire:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->autorizatie_de_construire }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['achizitii']))
+                        @if(in_array($proiectTip->slug, ['achizitii']))
                             <div class="col-md-6 mb-3">
                                 <strong>Documentație eligibilitate:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->documentatie_eligibilitate }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['achizitii']))
+                        @if(in_array($proiectTip->slug, ['achizitii']))
                             <div class="col-md-6 mb-3">
                                 <strong>Personal:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->personal }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['achizitii']))
+                        @if(in_array($proiectTip->slug, ['achizitii']))
                             <div class="col-md-6 mb-3">
                                 <strong>Formulare:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->formulare }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['achizitii']))
+                        @if(in_array($proiectTip->slug, ['achizitii']))
                             <div class="col-md-6 mb-3">
                                 <strong>Propunere tehnică:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->propunere_tehnica }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['achizitii']))
+                        @if(in_array($proiectTip->slug, ['achizitii']))
                             <div class="col-md-6 mb-3">
                                 <strong>Propunere financiară:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->propunere_financiara }}</span>
                             </div>
                         @endif
-                        @if(in_array($tipProiect, ['achizitii']))
+                        @if(in_array($proiectTip->slug, ['achizitii']))
                             <div class="col-md-6 mb-3">
                                 <strong>Stadiu încărcare:</strong>
                                 <span style="white-space: pre-wrap;">{{ $proiect->stadiu_incarcare }}</span>
@@ -209,10 +209,10 @@
                     </div>
 
                     <div class="d-flex justify-content-center mt-4">
-                        <a href="{{ route('proiecte.edit', ['tipProiect' => $tipProiect, 'proiect' => $proiect->id]) }}" class="btn btn-primary text-white me-3 rounded-3">
+                        <a href="{{ route('proiecte.edit', ['proiectTip' => $proiectTip->slug, 'proiect' => $proiect->id]) }}" class="btn btn-primary text-white me-3 rounded-3">
                             <i class="fa-solid fa-edit"></i> Modifică
                         </a>
-                        <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $tipProiect)) }}">
+                        <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $proiectTip->slug)) }}">
                             <i class="fa-solid fa-arrow-left"></i> Înapoi
                         </a>
                     </div>

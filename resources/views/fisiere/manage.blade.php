@@ -9,7 +9,7 @@
                     <div class="border border-secondary p-2 culoare2" style="border-radius: 40px 40px 0 0;">
                         <span class="badge text-light fs-5">
                             <i class="fa-solid fa-folder-open me-1"></i>
-                            Gestionare fișiere - {{ $ownerType }}: {{ $owner->nume ?? $owner->denumire_contract }}
+                            Gestionare fișiere - {{ $owner->nume ?? $owner->denumire_contract }}
                         </span>
                     </div>
 
