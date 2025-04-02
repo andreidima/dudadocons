@@ -23,7 +23,7 @@
                             <strong>Data Contract:</strong> {{ $proiect->data_contract?->format('d.m.Y') }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <strong>Data Limită Predare:</strong> {{ $proiect->data_limita_predare }}
+                            <strong>Data Limită Predare:</strong> {{ $proiect->data_limita_predare?->format('d.m.Y') }}
                         </div>
                         <div class="col-md-6 mb-3">
                             <strong>Nr. Proces Verbal Predare-Primire:</strong> {{ $proiect->nr_proces_verbal_predare_primire }}
@@ -34,7 +34,20 @@
                         <div class="col-md-6 mb-3">
                             <strong>Stare Contract:</strong> {{ $proiect->stare_contract }}
                         </div>
+                    </div>
 
+                    @can('admin-action')
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <strong>Preț:</strong> {{ $proiect->pret }} lei
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong>Preț observații:</strong> {{ $proiect->pret_observatii }}
+                            </div>
+                        </div>
+                    @endcan
+
+                    <div class="row">
                         <!-- Membri Section -->
                         @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <div class="col-md-6 mb-3">
@@ -45,7 +58,10 @@
                                             <li class="list-group-item">
                                                 {{ $loop->iteration }}.
                                                 <a href="{{ $membru->path() }}" style="text-decoration: none;">
-                                                    {{ $membru->nume }} {{ $membru->prenume }}
+                                                    {{ $membru->nume }}
+                                                    @if ($membru->pivot->observatii)
+                                                        - {{ $membru->pivot->observatii }}
+                                                    @endif
                                                 </a>
                                             </li>
                                         @endforeach
@@ -67,6 +83,9 @@
                                                 {{ $loop->iteration }}.
                                                 <a href="{{ $subcontractant->path() }}" style="text-decoration: none;">
                                                     {{ $subcontractant->nume }}
+                                                    @if ($subcontractant->pivot->observatii)
+                                                        - {{ $subcontractant->pivot->observatii }}
+                                                    @endif
                                                 </a>
                                             </li>
                                         @endforeach
@@ -76,7 +95,10 @@
                                 @endif
                             </div>
                         @endif
+                    </div>
 
+
+                    <div class="row">
                         @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
                             <div class="col-md-6 mb-3">
                                 <strong>CU:</strong> {{ $proiect->cu }}
@@ -196,6 +218,10 @@
                                 <span style="white-space: pre-wrap;">{{ $proiect->stadiu_incarcare }}</span>
                             </div>
                         @endif
+                        <div class="col-md-6 mb-3">
+                            <strong>Comentarii:</strong>
+                            <span style="white-space: pre-wrap;">{{ $proiect->comentarii }}</span>
+                        </div>
                         <div class="col-md-6 mb-3">
                             <strong>Observații:</strong>
                             <span style="white-space: pre-wrap;">{{ $proiect->observatii }}</span>

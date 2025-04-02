@@ -16,7 +16,7 @@
                 @csrf
                 <div class="row mb-1 custom-search-form justify-content-center">
                     <div class="col-lg-6">
-                        <input type="text" class="form-control rounded-3" id="searchNume" name="searchNume" placeholder="Nume sau prenume" value="{{ $searchNume }}">
+                        <input type="text" class="form-control rounded-3" id="searchNume" name="searchNume" placeholder="Nume" value="{{ $searchNume }}">
                     </div>
                     <div class="col-lg-6">
                         <input type="text" class="form-control rounded-3" id="searchTelefon" name="searchTelefon" placeholder="Telefon" value="{{ $searchTelefon }}">
@@ -55,7 +55,6 @@
                 <thead class="text-white rounded">
                     <tr class="thead-danger" style="padding:2rem">
                         <th class="text-white culoare2"><i class="fa-solid fa-hashtag"></i></th>
-                        <th class="text-white culoare2"><i class="fa-solid fa-user me-1"></i> Prenume</th>
                         <th class="text-white culoare2"><i class="fa-solid fa-user me-1"></i> Nume</th>
                         <th class="text-white culoare2"><i class="fa-solid fa-phone me-1"></i> Telefon</th>
                         <th class="text-white culoare2"><i class="fa-solid fa-briefcase me-1"></i> Funcție</th>
@@ -69,7 +68,6 @@
                             <td>
                                 {{ ($membri->currentpage() - 1) * $membri->perpage() + $loop->index + 1 }}
                             </td>
-                            <td>{{ $membru->prenume }}</td>
                             <td>{{ $membru->nume }}</td>
                             <td>{{ $membru->telefon ?? '-' }}</td>
                             <td>{{ $membru->functie ?? '-' }}</td>
@@ -114,7 +112,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-danger">
                     <h5 class="modal-title text-white" id="stergeMembruLabel{{ $membru->id }}">
-                        <i class="fa-solid fa-user-times me-1"></i> Membru: <b>{{ $membru->prenume }} {{ $membru->nume }}</b>
+                        <i class="fa-solid fa-user-times me-1"></i> Membru: <b>{{ $membru->nume }}</b>
                     </h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

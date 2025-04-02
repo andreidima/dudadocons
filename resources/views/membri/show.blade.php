@@ -14,9 +14,6 @@
                 <div class="card-body border border-secondary p-4" style="border-radius: 0px 0px 40px 40px;">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <strong>Prenume:</strong> {{ $membru->prenume }}
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <strong>Nume:</strong> {{ $membru->nume }}
                         </div>
                         <div class="col-md-6 mb-3">

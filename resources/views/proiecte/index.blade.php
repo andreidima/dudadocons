@@ -72,8 +72,18 @@
 
         @include ('errors.errors')
 
+        @if(session('email_errors'))
+            <div class="alert alert-danger mb-0">
+                <ul class="mb-0">
+                    @foreach(session('email_errors') as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="table-responsive rounded">
-            <table class="table table-sm table-striped table-hover rounded">
+            <table class="table table-sm table-border border-dark table-hover rounded">
                 <thead class="text-white rounded">
                     <tr class="thead-danger" style="padding:2rem">
                         <th class="text-white culoare2"><i class="fa-solid fa-hashtag"></i></th>
@@ -81,10 +91,12 @@
                             <i class="fa-solid fa-hashtag"></i> Nr. Contract
                             <br>
                             <i class="fa-solid fa-file-contract"></i> Denumire contract</th>
-                        <th class="text-white culoare2">
+                        <th class="text-white culoare2 small">
                             <i class="fa-solid fa-calendar-alt"></i> Data Contract
                             <br>
                             <i class="fa-solid fa-calendar-check"></i> Data limită predare
+                            <br>
+                            <i class="fa-solid fa-file-signature"></i> Data Proces Verbal Predare-Primire
                         </th>
                         @if(in_array($proiectTip->slug, ['civile', 'privati']))
                             <th class="text-white culoare2"><i class="fa-solid fa-user-group"></i> Membri</th>
@@ -98,7 +110,13 @@
                 </thead>
                 <tbody>
                     @forelse ($proiecte as $proiect)
-                        <tr>
+                        <tr class="
+                            @if ($proiect->data_proces_verbal_predare_primire) bg-success
+                            @elseif ($proiect->data_limita_predare && $proiect->data_limita_predare < now()) bg-danger
+                            @elseif ($proiect->data_limita_predare) bg-warning
+                            @else bg-light
+                            @endif
+                        ">
                             <td>{{ ($proiecte->currentpage() - 1) * $proiecte->perpage() + $loop->index + 1 }}</td>
                             <td>
                                 {{ $proiect->nr_contract ?? '-' }}
@@ -107,7 +125,9 @@
                             <td>
                                 {{ $proiect->data_contract?->format('d.m.Y') ?? '-' }}
                                 <br>
-                                {{ $proiect->data_limita_predare ?? '-' }}
+                                {{ $proiect->data_limita_predare?->format('d.m.Y') ?? '-' }}
+                                <br>
+                                {{ $proiect->data_proces_verbal_predare_primire?->format('d.m.Y') ?? '-' }}
                             </td>
                             @if(in_array($proiectTip->slug, ['civile', 'privati']))
                                 <td>
@@ -115,7 +135,10 @@
                                         @foreach($proiect->membri as $membru)
                                             {{ $loop->iteration }}.
                                             <a href="{{ $membru->path() }}" style="text-decoration: none;">
-                                                {{ $membru->nume }} {{ $membru->prenume }}
+                                                {{ $membru->nume }}
+                                                @if ($membru->pivot->observatii)
+                                                    - {{ $membru->pivot->observatii }}
+                                                @endif
                                             </a>
                                             <!-- Email icon for member -->
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#emailModal_{{ $proiect->id }}_membru_{{ $membru->id }}" title="Trimite Email">
@@ -150,7 +173,11 @@
                                         @foreach($proiect->subcontractanti as $subcontractant)
                                             {{ $loop->iteration }}.
                                             <a href="{{ $subcontractant->path() }}" style="text-decoration: none;">
-                                                {{ $subcontractant->nume }}</a>
+                                                {{ $subcontractant->nume }}
+                                                @if ($subcontractant->pivot->observatii)
+                                                    - {{ $subcontractant->pivot->observatii }}
+                                                @endif
+                                            </a>
                                             <!-- Email icon for subcontractant with yellow color -->
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#emailModal_{{ $proiect->id }}_subcontractant_{{ $subcontractant->id }}" title="Trimite Email">
                                                 <i class="fa-solid fa-envelope text-info ms-1"></i></a>
@@ -222,6 +249,10 @@
                 {{ $proiecte->appends(Request::except('page'))->links() }}
             </ul>
         </nav>
+
+        <div class="ps-3">
+            * Ordinea de afișare: Întârzieri primele, Termene apropiate, Fără deadline, Finalizate ultimele.
+        </div>
     </div>
 </div>
 
@@ -236,7 +267,7 @@
                     <div class="modal-content">
                         <div class="modal-header bg-info">
                             <h5 class="modal-title text-white" id="emailModalLabel_{{ $proiect->id }}_membru_{{ $membru->id }}">
-                                Trimite Email către {{ $membru->nume }} {{ $membru->prenume }}
+                                Trimite Email către {{ $membru->nume }}
                             </h5>
                             <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Închide"></button>
                         </div>
@@ -262,7 +293,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="email-message_{{ $proiect->id }}_membru_{{ $membru->id }}" class="form-label">Mesaj</label>
-                                    <textarea class="form-control" id="email-message_{{ $proiect->id }}_membru_{{ $membru->id }}" name="email_mesaj" rows="5">Bună {{ $membru->nume }} {{ $membru->prenume }},
+                                    <textarea class="form-control" id="email-message_{{ $proiect->id }}_membru_{{ $membru->id }}" name="email_mesaj" rows="5">Bună {{ $membru->nume }},
 
 
 Cu stimă,

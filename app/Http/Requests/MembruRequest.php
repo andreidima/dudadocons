@@ -22,7 +22,6 @@ class MembruRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'prenume' => 'required|string|max:100',
             'nume' => 'required|string|max:100',
             'email' => 'nullable|email|max:255',
             'telefon' => 'nullable|string|max:100',

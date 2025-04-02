@@ -11,7 +11,7 @@
                     @php
                        $membru = App\Models\Membru::findOrFail($destinatar_id)
                     @endphp
-                    {{ $membru->prenume ?? ''}} {{ $membru->nume ?? '' }}
+                    {{ $membru->nume ?? '' }}
                 @elseif($destinatar_type === 'subcontractant')
                     @php
                        $subcontractant = App\Models\Subcontractant::findOrFail($destinatar_id)
@@ -38,6 +38,7 @@
                         <th class="text-white culoare2">Subiect</th>
                         <th class="text-white culoare2">Mesaj</th>
                         <th class="text-white culoare2">Data trimiterii</th>
+                        <th class="text-white culoare2">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,17 @@
                             <td>{{ $email->email_subiect }}</td>
                             <td>{{ $email->email_mesaj }}</td>
                             <td>{{ $email->sent_at->format('d.m.Y H:i') }}</td>
+                            <td>
+                                @if($email->error_code)
+                                    <span class="text-danger" title="Cod eroare: {{ $email->error_code }}; Mesaj: {{ $email->error_message }}">
+                                        <i class="fa-solid fa-exclamation-circle"></i> Eroare
+                                    </span>
+                                @else
+                                    <span class="text-success">
+                                        <i class="fa-solid fa-check"></i> Trimis
+                                    </span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>

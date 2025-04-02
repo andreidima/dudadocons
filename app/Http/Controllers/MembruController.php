@@ -24,8 +24,7 @@ class MembruController extends Controller
         $searchTelefon = trim($request->searchTelefon); // Phone search field
 
         $membri = Membru::when($searchNume, function ($q, $searchNume) {
-                $q->whereRaw("CONCAT(nume, ' ', prenume) LIKE ?", ["%{$searchNume}%"])
-                ->orWhereRaw("CONCAT(prenume, ' ', nume) LIKE ?", ["%{$searchNume}%"]);
+                return $query->where('nume', 'LIKE', "%{$searchNume}%");
             })
             ->when($searchTelefon, function ($query, $searchTelefon) {
                 return $query->where('telefon', 'LIKE', "%{$searchTelefon}%");
@@ -62,7 +61,7 @@ class MembruController extends Controller
 
         $membru = Membru::create($data);
 
-        return redirect($request->session()->get('returnUrl', route('membri.index')))->with('success', 'Membrul <strong>' . e($membru->prenume) . ' ' . e($membru->nume) . '</strong> a fost adăugat cu succes!');
+        return redirect($request->session()->get('returnUrl', route('membri.index')))->with('success', 'Membrul <strong>' . e($membru->nume) . '</strong> a fost adăugat cu succes!');
     }
 
     /**
@@ -104,7 +103,7 @@ class MembruController extends Controller
 
         $membru->update($data);
 
-        return redirect($request->session()->get('returnUrl', route('membri.index')))->with('status', 'Membrul <strong>' . e($membru->prenume) . ' ' . e($membru->nume) . '</strong> a fost modificat cu succes!');
+        return redirect($request->session()->get('returnUrl', route('membri.index')))->with('status', 'Membrul <strong>' . e($membru->nume) . '</strong> a fost modificat cu succes!');
     }
 
     /**
@@ -121,6 +120,6 @@ class MembruController extends Controller
 
         $membru->delete();
 
-        return back()->with('status', 'Membrul <strong>' . e($membru->prenume) . ' ' . e($membru->nume) . '</strong> a fost șters cu succes!');
+        return back()->with('status', 'Membrul <strong>' . e($membru->nume) . '</strong> a fost șters cu succes!');
     }
 }

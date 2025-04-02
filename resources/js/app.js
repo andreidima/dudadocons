@@ -41,3 +41,9 @@ sendEmailModals.component('disable-once-button', DisableOnceButton);
 if (document.getElementById('sendEmailModals') !== null) {
     sendEmailModals.mount('#sendEmailModals');
 }
+
+const disableOnceButton = createApp({});
+disableOnceButton.component('disable-once-button', DisableOnceButton);
+if (document.getElementById('disableOnceButton') !== null) {
+    disableOnceButton.mount('#disableOnceButton');
+}

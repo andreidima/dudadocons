@@ -57,3 +57,17 @@
 .preserve-newlines {
     white-space: pre-wrap; /* preserves whitespace and wraps text */
 }
+
+
+.table tr.bg-danger td {
+    background-color: #f8d7da !important;
+}
+.table tr.bg-warning td {
+    background-color: #fff3cd !important;
+}
+.table tr.bg-success td {
+    background-color: #d4edda !important;
+}
+.table tr.bg-light td {
+    background-color: #f8f9fa !important;
+}

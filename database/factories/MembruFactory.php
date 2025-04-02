@@ -28,7 +28,6 @@ class MembruFactory extends Factory
         ];
 
         return [
-            'prenume' => $this->faker->firstName,
             'nume' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
             'telefon' => $this->faker->phoneNumber,

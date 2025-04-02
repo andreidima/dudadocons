@@ -37,7 +37,6 @@ Route::middleware(['auth', 'checkUserActiv'])->group(function () {
     Route::resource('fisiere', FisierController::class)->only(['store', 'destroy'])->parameters(['fisiere' => 'fisier']);
 
     Route::resource('/utilizatori', UserController::class)->parameters(['utilizatori' => 'user'])->names('users')
-        // ->middleware('checkUserRole:admin,superadmin');
         ->middleware('checkUserRole:Admin,SuperAdmin');
 
     Route::post('/send-email', [EmailController::class, 'sendEmail'])->name('email.send');

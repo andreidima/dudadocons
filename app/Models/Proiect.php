@@ -15,6 +15,7 @@ class Proiect extends Model
 
     protected $casts = [
         'data_contract' => 'datetime',
+        'data_limita_predare' => 'datetime',
         'data_proces_verbal_predare_primire' => 'datetime',
     ];
 
@@ -35,12 +36,12 @@ class Proiect extends Model
 
     public function membri()
     {
-        return $this->belongsToMany(Membru::class, 'membru_proiect');
+        return $this->belongsToMany(Membru::class, 'membru_proiect')->withPivot('observatii')->orderBy('nume');
     }
 
     public function subcontractanti()
     {
-        return $this->belongsToMany(Subcontractant::class, 'proiect_subcontractant');
+        return $this->belongsToMany(Subcontractant::class, 'proiect_subcontractant')->withPivot('observatii')->orderBy('nume');
     }
 
     public function fisiere()

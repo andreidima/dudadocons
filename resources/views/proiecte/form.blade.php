@@ -10,7 +10,7 @@
             rows="3">{{ old('denumire_contract', $proiect->denumire_contract ?? '') }}</textarea>
     </div>
 
-    <div class="col-lg-10 mb-4">
+    <div class="col-lg-8 mb-4">
         <label for="nr_contract" class="mb-0 ps-3">Nr. Contract</label>
         <input
             type="text"
@@ -33,14 +33,17 @@
         ></vue-datepicker-next>
     </div>
 
-    <div class="col-lg-12 mb-4">
-        <label for="data_limita_predare" class="mb-0 ps-3">Data Limită Predare</label>
-        <input
-            type="text"
-            class="form-control bg-white rounded-3"
-            name="data_limita_predare"
+    <div class="col-lg-2 mb-4 text-center">
+        <label for="data_limita_predare" class="mb-0 ps-0">Data Limită Predare</label>
+        <vue-datepicker-next
             id="data_limita_predare"
-            value="{{ old('data_limita_predare', $proiect->data_limita_predare ?? '') }}">
+            data-veche="{{ old('data_limita_predare', $proiect->data_limita_predare ?? null) }}"
+            nume-camp-db="data_limita_predare"
+            tip="date"
+            value-type="YYYY-MM-DD"
+            format="DD.MM.YYYY"
+            :latime="{ width: '125px' }"
+        ></vue-datepicker-next>
     </div>
 
     <div class="col-lg-9 mb-4">
@@ -75,36 +78,58 @@
             id="stare_contract"
             value="{{ old('stare_contract', $proiect->stare_contract ?? '') }}">
     </div>
+
+    @can('admin-action')
+        <div class="col-lg-3 mb-4">
+            <label for="pret" class="mb-0 ps-3">Preț</label>
+            <input
+                type="text"
+                class="form-control bg-white rounded-3"
+                name="pret"
+                id="pret"
+                value="{{ old('pret', $proiect->pret ?? '') }}">
+        </div>
+
+        <div class="col-lg-9 mb-4">
+            <label for="pret_observatii" class="mb-0 ps-3">Preț observații</label>
+            <textarea
+                class="form-control bg-white rounded-3"
+                name="pret_observatii"
+                id="pret_observatii"
+                rows="3">{{ old('pret_observatii', $proiect->pret_observatii ?? '') }}</textarea>
+        </div>
+    @endcan
 </div>
 
+@if(in_array($proiectTip->slug, ['civile', 'privati']))
+    <div class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
+        <div class="col-lg-12">
+            <!-- Where we mount our MembriSelector Vue app -->
+            <div id="membriSelectorApp">
+                <!-- Pass the data from the controller as JSON props -->
+                <membri-selector
+                    :all-membri='@json($allMembri)'
+                    :existing-membri='@json($existingMembri)'
+                >
+                </membri-selector>
+            </div>
+        </div>
+    </div>
+@endif
+
 @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
-    <div class="row gx-4 mb-4">
-        @if(in_array($proiectTip->slug, ['civile', 'privati']))
-            <div class="col-lg-6 ps-0">
-                <!-- Where we mount our MembriSelector Vue app -->
-                <div id="membriSelectorApp" class="pt-2 pb-4 px-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
-                    <!-- Pass the data from the controller as JSON props -->
-                    <membri-selector
-                        :all-membri='@json($allMembri)'
-                        :existing-membri='@json($existingMembri)'
-                    >
-                    </membri-selector>
-                </div>
+    <div class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
+        <div class="col-lg-12">
+            <!-- Where we mount our SubcontractantiSelector Vue app -->
+            <div id="subcontractantiSelectorApp">
+                <!-- Pass the data from the controller as JSON props -->
+                <subcontractanti-selector
+                    :all-subcontractanti='@json($allSubcontractanti)'
+                    :existing-subcontractanti='@json($existingSubcontractanti)'
+                >
+                </subcontractanti-selector>
             </div>
-        @endif
-        @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
-            <div class="col-lg-6 px-0">
-                <!-- Where we mount our SubcontractantiSelector Vue app -->
-                <div id="subcontractantiSelectorApp" class="pt-2 px-2 pb-4 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:rgb(241, 250, 250)">
-                    <!-- Pass the data from the controller as JSON props -->
-                    <subcontractanti-selector
-                        :all-subcontractanti='@json($allSubcontractanti)'
-                        :existing-subcontractanti='@json($existingSubcontractanti)'
-                    >
-                    </subcontractanti-selector>
-                </div>
-            </div>
-        @endif
+        </div>
     </div>
 @endif
 
@@ -332,6 +357,15 @@
     @endif
 
     <div class="col-lg-12 mb-4">
+        <label for="comentarii" class="mb-0 ps-3">Comentarii</label>
+        <textarea
+            class="form-control bg-white rounded-3"
+            name="comentarii"
+            id="comentarii"
+            rows="5">{{ old('comentarii', $proiect->comentarii ?? '') }}</textarea>
+    </div>
+
+    <div class="col-lg-12 mb-4">
         <label for="observatii" class="mb-0 ps-3">Observații</label>
         <textarea
             class="form-control bg-white rounded-3"
@@ -342,10 +376,15 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12 px-4 py-2 mb-0 text-center">
-        <button type="submit" class="btn btn-primary text-white me-3 rounded-3">
+    <div id="disableOnceButton" class="col-lg-12 px-4 py-2 mb-0 text-center">
+        <disable-once-button
+            class="btn btn-primary text-white me-3 rounded-3"
+            type="submit"
+            processing-text="Se procesează cererea..."
+            :hide-on-click="false"
+        >
             <i class="fa-solid fa-save me-1"></i> {{ $buttonText }}
-        </button>
+        </disable-once-button>
         <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('proiecte.index', $proiectTip->slug)) }}">
             Renunță
         </a>

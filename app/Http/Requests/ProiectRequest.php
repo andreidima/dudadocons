@@ -33,6 +33,8 @@ class ProiectRequest extends FormRequest
             'nr_proces_verbal_predare_primire' => 'nullable|string|max:255',
             'data_proces_verbal_predare_primire' => 'nullable|date',
             'stare_contract' => 'nullable|string|max:255',
+            'pret' => 'nullable|numeric|between:0,999999.99',
+            'pret_observatii' => 'nullable|string|max:5000',
             'cu' => 'nullable|string|max:5000',
             'nr_proiect' => 'nullable|string|max:5000',
             'studii_teren' => 'nullable|string|max:5000',
@@ -53,15 +55,18 @@ class ProiectRequest extends FormRequest
             'propunere_tehnica' => 'nullable|string|max:5000',
             'propunere_financiara' => 'nullable|string|max:5000',
             'stadiu_incarcare' => 'nullable|string|max:5000',
+            'comentarii' => 'nullable|string|max:5000',
             'observatii' => 'nullable|string|max:5000',
 
             // Add this rule for membri
-            'membri_ids' => 'nullable|array',
-            'membri_ids.*' => 'exists:membri,id', // ensure each ID exists in 'membri' table
+            'membri' => 'nullable|array',
+            'membri.*.id' => 'required|exists:membri,id', // ensure each ID exists in 'membri' table
+            'membri.*.observatii' => 'nullable|string|max:5000',
 
             // Add this rule for subcontractanti
-            'subcontractanti_ids' => 'nullable|array',
-            'subcontractanti_ids.*' => 'exists:subcontractanti,id', // ensure each ID exists in 'subcontractanti' table
+            'subcontractanti' => 'nullable|array',
+            'subcontractanti.*.id' => 'required|exists:subcontractanti,id', // ensure each ID exists in 'subcontractanti' table
+            'subcontractanti.*.observatii' => 'nullable|string|max:5000',
         ];
     }
 

@@ -15,7 +15,7 @@
                 @csrf
                 <div class="row mb-1 custom-search-form justify-content-center">
                     <div class="col-lg-6">
-                        <input type="text" class="form-control rounded-3" id="searchNume" name="searchNume" placeholder="Nume sau prenume" value="{{ $searchNume }}">
+                        <input type="text" class="form-control rounded-3" id="searchNume" name="searchNume" placeholder="Nume" value="{{ $searchNume }}">
                     </div>
                     <div class="col-lg-6">
                         <input type="text" class="form-control rounded-3" id="searchTelefon" name="searchTelefon" placeholder="Telefon" value="{{ $searchTelefon }}">

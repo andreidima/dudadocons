@@ -9,7 +9,12 @@ class ProiectEmailTrimis extends Model
     protected $table = "proiecte_emailuri_trimise";
     protected $guarded = [];
 
-    protected $casts = [
-        'sent_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'sent_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 }
