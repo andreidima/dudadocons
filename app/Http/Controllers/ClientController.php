@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\CLient;
-use App\Http\Requests\CLientRequest;
+use App\Models\Client;
+use App\Http\Requests\ClientRequest;
 use Carbon\Carbon;
 
-class CLientController extends Controller
+class ClientController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class CLientController extends Controller
         $searchNume = trim($request->searchNume);
         $searchTelefon = trim($request->searchTelefon);
 
-        $clienti = CLient::when($searchNume, function ($query, $searchNume) {
+        $clienti = Client::when($searchNume, function ($query, $searchNume) {
                 return $query->where('nume', 'LIKE', "%{$searchNume}%");
             })
             ->when($searchTelefon, function ($query, $searchTelefon) {
@@ -47,20 +47,20 @@ class CLientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CLientRequest $request)
+    public function store(ClientRequest $request)
     {
         $data = $request->validated();
 
-        $client = CLient::create($data);
+        $client = Client::create($data);
 
         return redirect($request->session()->get('returnUrl', route('clienti.index')))
-            ->with('success', 'CLientul <strong>' . e($client->nume) . '</strong> a fost adăugat cu succes!');
+            ->with('success', 'Clientul <strong>' . e($client->nume) . '</strong> a fost adăugat cu succes!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, CLient $client)
+    public function show(Request $request, Client $client)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
@@ -70,7 +70,7 @@ class CLientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, CLient $client)
+    public function edit(Request $request, Client $client)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
@@ -80,23 +80,23 @@ class CLientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CLientRequest $request, CLient $client)
+    public function update(ClientRequest $request, Client $client)
     {
         $data = $request->validated();
 
         $client->update($data);
 
         return redirect($request->session()->get('returnUrl', route('clienti.index')))
-            ->with('status', 'CLientul <strong>' . e($client->nume) . '</strong> a fost modificat cu succes!');
+            ->with('status', 'Clientul <strong>' . e($client->nume) . '</strong> a fost modificat cu succes!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, CLient $client)
+    public function destroy(Request $request, Client $client)
     {
         $client->delete();
 
-        return back()->with('status', 'CLientul <strong>' . e($client->nume) . '</strong> a fost șters cu succes!');
+        return back()->with('status', 'Clientul <strong>' . e($client->nume) . '</strong> a fost șters cu succes!');
     }
 }
