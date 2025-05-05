@@ -5,7 +5,7 @@
     <div class="row card-header align-items-center" style="border-radius: 40px 40px 0px 0px;">
         <div class="col-lg-3">
             <span class="badge culoare1 fs-5">
-                <i class="fa-solid fa-handshake me-1"></i> Subcontractanți
+                <i class="fa-solid fa-handshake me-1"></i> Clienți
             </span>
         </div>
 
@@ -36,10 +36,10 @@
             </form>
         </div>
 
-        {{-- Button to add new subcontractant --}}
+        {{-- Button to add new client --}}
         <div class="col-lg-3 text-end">
             <a class="btn btn-sm btn-success text-white border border-dark rounded-3 col-md-8" href="{{ url()->current() }}/adauga" role="button">
-                <i class="fas fa-plus-circle text-white me-1"></i> Adaugă Subcontractant
+                <i class="fas fa-plus-circle text-white me-1"></i> Adaugă Client
             </a>
         </div>
     </div>
@@ -62,22 +62,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($subcontractanti as $subcontractant)
+                    @forelse ($clienti as $client)
                         <tr>
-                            <td>{{ ($subcontractanti->currentpage() - 1) * $subcontractanti->perpage() + $loop->index + 1 }}</td>
-                            <td>{{ $subcontractant->nume }}</td>
-                            <td>{{ $subcontractant->telefon ?? '-' }}</td>
-                            <td>{{ $subcontractant->email ?? '-' }}</td>
-                            <td>{{ $subcontractant->oras ?? '-' }}</td>
+                            <td>{{ ($clienti->currentpage() - 1) * $clienti->perpage() + $loop->index + 1 }}</td>
+                            <td>{{ $client->nume }}</td>
+                            <td>{{ $client->telefon ?? '-' }}</td>
+                            <td>{{ $client->email ?? '-' }}</td>
+                            <td>{{ $client->oras ?? '-' }}</td>
                             <td>
                                 <div class="d-flex justify-content-end">
-                                    <a href="{{ $subcontractant->path() }}" class="flex me-1">
+                                    <a href="{{ $client->path() }}" class="flex me-1">
                                         <span class="badge bg-success" title="Vizualizează"><i class="fa-solid fa-eye"></i></span>
                                     </a>
-                                    <a href="{{ $subcontractant->path('edit') }}" class="flex me-1">
+                                    <a href="{{ $client->path('edit') }}" class="flex me-1">
                                         <span class="badge bg-primary" title="Modifică"><i class="fa-solid fa-edit"></i></span>
                                     </a>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#stergeSubcontractant{{ $subcontractant->id }}" title="Șterge Subcontractant">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#stergeClient{{ $client->id }}" title="Șterge Client">
                                         <span class="badge bg-danger" title="Șterge"><i class="fa-solid fa-trash"></i></span>
                                     </a>
                                 </div>
@@ -86,7 +86,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="text-center text-muted py-3">
-                                <i class="fa-solid fa-exclamation-circle me-1"></i> Nu s-au găsit subcontractanți în baza de date.
+                                <i class="fa-solid fa-exclamation-circle me-1"></i> Nu s-au găsit înregistrări în baza de date.
                             </td>
                         </tr>
                     @endforelse
@@ -96,33 +96,33 @@
 
         <nav>
             <ul class="pagination justify-content-center">
-                {{ $subcontractanti->appends(Request::except('page'))->links() }}
+                {{ $clienti->appends(Request::except('page'))->links() }}
             </ul>
         </nav>
     </div>
 </div>
 
-{{-- Modals to delete subcontractants --}}
-@foreach ($subcontractanti as $subcontractant)
-    <div class="modal fade text-dark" id="stergeSubcontractant{{ $subcontractant->id }}" tabindex="-1" role="dialog" aria-labelledby="stergeSubcontractantLabel{{ $subcontractant->id }}" aria-hidden="true">
+{{-- Modals to delete clients --}}
+@foreach ($clienti as $client)
+    <div class="modal fade text-dark" id="stergeClient{{ $client->id }}" tabindex="-1" role="dialog" aria-labelledby="stergeClientLabel{{ $client->id }}" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h5 class="modal-title text-white" id="stergeSubcontractantLabel{{ $subcontractant->id }}">
-                        <i class="fa-solid fa-user-times me-1"></i> Subcontractant: <b>{{ $subcontractant->nume }}</b>
+                    <h5 class="modal-title text-white" id="stergeClientLabel{{ $client->id }}">
+                        <i class="fa-solid fa-user-times me-1"></i> Client: {{ $client->nume }}
                     </h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-start">
-                    Ești sigur că vrei să ștergi acest subcontractant?
+                    Ești sigur că vrei să ștergi acest client?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
-                    <form method="POST" action="{{ $subcontractant->path('destroy') }}">
+                    <form method="POST" action="{{ $client->path('destroy') }}">
                         @method('DELETE')
                         @csrf
                         <button type="submit" class="btn btn-danger text-white">
-                            <i class="fa-solid fa-trash me-1"></i> Șterge Subcontractant
+                            <i class="fa-solid fa-trash me-1"></i> Șterge Client
                         </button>
                     </form>
                 </div>

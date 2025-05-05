@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AcasaController;
 use App\Http\Controllers\MembruController;
-use App\Http\Controllers\SubcontractantController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProiectController;
 use App\Http\Controllers\FisierController;
 use App\Http\Controllers\UserController;
@@ -20,14 +20,20 @@ Route::middleware(['auth', 'checkUserActiv'])->group(function () {
     Route::get('/acasa', [AcasaController::class, 'acasa'])->name('acasa');
 
     Route::resource('membri', MembruController::class)->parameters(['membri' => 'membru']);
-    Route::resource('subcontractanti', SubcontractantController::class)->parameters(['subcontractanti' => 'subcontractant']);
+    Route::resource('clienti', ClientController::class)->parameters(['clienti' => 'client']);
 
     Route::group([
         'prefix' => 'proiecte/{proiectTip}',
         'as' => 'proiecte.'
     ], function () {
-        Route::get('{proiect}/emailuri/{destinatar_type}/{destinatar_id}', [ProiectController::class, 'showEmailuri'])
-            ->name('show.emailuri');
+        Route::post('{proiect}/assign-member', [ProiectController::class, 'assignMember'])
+            ->name('assign.membri');
+        Route::patch('{proiect}/membru-modifica/{pivotMembruProiectId}', [ProiectController::class, 'membruModifica'])
+            ->name('membri.modifica');
+        Route::delete(
+            '{proiect}/membru-sterge/{pivotMembruProiectId}',
+            [ProiectController::class, 'membruSterge']
+        )->name('membri.sterge');
         Route::resource('', ProiectController::class)->parameters(['' => 'proiect']);
     });
 

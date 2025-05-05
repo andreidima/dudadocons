@@ -134,7 +134,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-danger">
                     <h5 class="modal-title text-white" id="stergeUtilizatorLabel{{ $user->id }}">
-                        <i class="fa-solid fa-user-minus me-1"></i> Șterge: <b>{{ $user->name }}</b>
+                        <i class="fa-solid fa-user-minus me-1"></i> Șterge: {{ $user->name }}
                     </h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

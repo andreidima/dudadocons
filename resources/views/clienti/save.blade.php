@@ -8,7 +8,7 @@
                 <div class="border border-secondary p-2 culoare2" style="border-radius: 40px 40px 0px 0px;">
                     <span class="badge text-light fs-5">
                         <i class="fa-solid fa-handshake me-1"></i>
-                        {{ isset($subcontractant) ? 'Editează Subcontractant' : 'Adaugă Subcontractant' }}
+                        {{ isset($client) ? 'Editează Client' : 'Adaugă Client' }}
                     </span>
                 </div>
 
@@ -19,15 +19,15 @@
                 >
                     <form class="needs-validation" novalidate
                           method="POST"
-                          action="{{ isset($subcontractant) ? route('subcontractanti.update', $subcontractant->id) : route('subcontractanti.store') }}">
+                          action="{{ isset($client) ? route('clienti.update', $client->id) : route('clienti.store') }}">
                         @csrf
-                        @if(isset($subcontractant))
+                        @if(isset($client))
                             @method('PUT')
                         @endif
 
-                        @include ('subcontractanti.form', [
-                            'subcontractant' => $subcontractant ?? null,
-                            'buttonText' => isset($subcontractant) ? 'Salvează modificările' : 'Adaugă Subcontractant',
+                        @include ('clienti.form', [
+                            'client' => $client ?? null,
+                            'buttonText' => isset($client) ? 'Salvează modificările' : 'Adaugă Client',
                         ])
                     </form>
                 </div>

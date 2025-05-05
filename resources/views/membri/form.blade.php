@@ -65,8 +65,9 @@
         <label for="observatii" class="mb-0 ps-3">Observații</label>
         <textarea
             class="form-control bg-white rounded-3"
+            name="observatii"
             id="observatii"
-            rows="5">{{ old('observatii', $subcontractant->observatii ?? '') }}</textarea>
+            rows="5">{{ old('observatii', $membru->observatii ?? '') }}</textarea>
     </div>
 </div>
 

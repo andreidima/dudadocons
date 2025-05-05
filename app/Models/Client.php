@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Subcontractant extends Model
+class Client extends Model
 {
     use HasFactory;
 
-    protected $table = 'subcontractanti';
+    protected $table = 'clienti';
     protected $guarded = [];
 
     protected $casts = [
@@ -20,9 +20,9 @@ class Subcontractant extends Model
     public function path($action = 'show')
     {
         return match ($action) {
-            'edit' => route('subcontractanti.edit', $this->id),
-            'destroy' => route('subcontractanti.destroy', $this->id),
-            default => route('subcontractanti.show', $this->id),
+            'edit' => route('clienti.edit', $this->id),
+            'destroy' => route('clienti.destroy', $this->id),
+            default => route('clienti.show', $this->id),
         };
     }
 

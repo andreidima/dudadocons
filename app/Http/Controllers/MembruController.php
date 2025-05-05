@@ -23,7 +23,7 @@ class MembruController extends Controller
         $searchNume = trim($request->searchNume); // Name search field
         $searchTelefon = trim($request->searchTelefon); // Phone search field
 
-        $membri = Membru::when($searchNume, function ($q, $searchNume) {
+        $membri = Membru::when($searchNume, function ($query, $searchNume) {
                 return $query->where('nume', 'LIKE', "%{$searchNume}%");
             })
             ->when($searchTelefon, function ($query, $searchTelefon) {

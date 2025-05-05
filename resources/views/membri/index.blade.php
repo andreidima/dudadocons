@@ -112,7 +112,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-danger">
                     <h5 class="modal-title text-white" id="stergeMembruLabel{{ $membru->id }}">
-                        <i class="fa-solid fa-user-times me-1"></i> Membru: <b>{{ $membru->nume }}</b>
+                        <i class="fa-solid fa-user-times me-1"></i> Membru: {{ $membru->nume }}
                     </h5>
                     <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

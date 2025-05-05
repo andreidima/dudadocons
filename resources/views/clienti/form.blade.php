@@ -7,7 +7,7 @@
             class="form-control bg-white rounded-3 {{ $errors->has('nume') ? 'is-invalid' : '' }}"
             name="nume"
             id="nume"
-            value="{{ old('nume', $subcontractant->nume ?? '') }}"
+            value="{{ old('nume', $client->nume ?? '') }}"
             required>
     </div>
 
@@ -18,7 +18,7 @@
             class="form-control bg-white rounded-3"
             name="tip"
             id="tip"
-            value="{{ old('tip', $subcontractant->tip ?? '') }}">
+            value="{{ old('tip', $client->tip ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -28,7 +28,7 @@
             class="form-control bg-white rounded-3"
             name="numar_inregistrare"
             id="numar_inregistrare"
-            value="{{ old('numar_inregistrare', $subcontractant->numar_inregistrare ?? '') }}">
+            value="{{ old('numar_inregistrare', $client->numar_inregistrare ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -38,7 +38,7 @@
             class="form-control bg-white rounded-3"
             name="cod_fiscal"
             id="cod_fiscal"
-            value="{{ old('cod_fiscal', $subcontractant->cod_fiscal ?? '') }}">
+            value="{{ old('cod_fiscal', $client->cod_fiscal ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -48,7 +48,7 @@
             class="form-control bg-white rounded-3"
             name="status"
             id="status"
-            value="{{ old('status', $subcontractant->status ?? '') }}">
+            value="{{ old('status', $client->status ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -59,7 +59,7 @@
             name="email"
             id="email"
             autocomplete="email"
-            value="{{ old('email', $subcontractant->email ?? '') }}">
+            value="{{ old('email', $client->email ?? '') }}">
     </div>
 
     <div class="col-lg-3 mb-4">
@@ -69,7 +69,7 @@
             class="form-control bg-white rounded-3"
             name="telefon"
             id="telefon"
-            value="{{ old('telefon', $subcontractant->telefon ?? '') }}">
+            value="{{ old('telefon', $client->telefon ?? '') }}">
     </div>
 </div>
 
@@ -81,7 +81,7 @@
             class="form-control bg-white rounded-3"
             name="adresa"
             id="adresa"
-            value="{{ old('adresa', $subcontractant->adresa ?? '') }}">
+            value="{{ old('adresa', $client->adresa ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -91,7 +91,7 @@
             class="form-control bg-white rounded-3"
             name="oras"
             id="oras"
-            value="{{ old('oras', $subcontractant->oras ?? '') }}">
+            value="{{ old('oras', $client->oras ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -101,7 +101,7 @@
             class="form-control bg-white rounded-3"
             name="cod_postal"
             id="cod_postal"
-            value="{{ old('cod_postal', $subcontractant->cod_postal ?? '') }}">
+            value="{{ old('cod_postal', $client->cod_postal ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -111,14 +111,14 @@
             class="form-control bg-white rounded-3"
             name="tara"
             id="tara"
-            value="{{ old('tara', $subcontractant->tara ?? '') }}">
+            value="{{ old('tara', $client->tara ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4 text-center">
         <label for="data_inceput_contract" class="mb-0 ps-0">Data Început Contract</label>
         <vue-datepicker-next
             id="data_inceput_contract"
-            data-veche="{{ old('data_inceput_contract', $subcontractant->data_inceput_contract ?? null) }}"
+            data-veche="{{ old('data_inceput_contract', $client->data_inceput_contract ?? null) }}"
             nume-camp-db="data_inceput_contract"
             tip="date"
             value-type="YYYY-MM-DD"
@@ -131,7 +131,7 @@
         <label for="data_sfarsit_contract" class="mb-0 ps-0">Data Sfârșit Contract</label>
         <vue-datepicker-next
             id="data_sfarsit_contract"
-            data-veche="{{ old('data_sfarsit_contract', $subcontractant->data_sfarsit_contract ?? null) }}"
+            data-veche="{{ old('data_sfarsit_contract', $client->data_sfarsit_contract ?? null) }}"
             nume-camp-db="data_sfarsit_contract"
             tip="date"
             value-type="YYYY-MM-DD"
@@ -147,7 +147,7 @@
             class="form-control bg-white rounded-3"
             name="tarif_orar"
             id="tarif_orar"
-            value="{{ old('tarif_orar', $subcontractant->tarif_orar ?? '') }}">
+            value="{{ old('tarif_orar', $client->tarif_orar ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -157,7 +157,7 @@
             class="form-control bg-white rounded-3"
             name="pret_fix"
             id="pret_fix"
-            value="{{ old('pret_fix', $subcontractant->pret_fix ?? '') }}">
+            value="{{ old('pret_fix', $client->pret_fix ?? '') }}">
     </div>
 
     <div class="col-lg-2 mb-4">
@@ -167,7 +167,7 @@
             class="form-control bg-white rounded-3"
             name="moneda"
             id="moneda"
-            value="{{ old('moneda', $subcontractant->moneda ?? '') }}">
+            value="{{ old('moneda', $client->moneda ?? '') }}">
     </div>
 </div>
 
@@ -179,7 +179,7 @@
             class="form-control bg-white rounded-3"
             name="conditii_plata"
             id="conditii_plata"
-            value="{{ old('conditii_plata', $subcontractant->conditii_plata ?? '') }}">
+            value="{{ old('conditii_plata', $client->conditii_plata ?? '') }}">
     </div>
 
     <div class="col-lg-6 mb-4">
@@ -189,15 +189,16 @@
             class="form-control bg-white rounded-3"
             name="specializare"
             id="specializare"
-            value="{{ old('specializare', $subcontractant->specializare ?? '') }}">
+            value="{{ old('specializare', $client->specializare ?? '') }}">
     </div>
 
     <div class="col-lg-12 mb-4">
         <label for="observatii" class="mb-0 ps-3">Observații</label>
         <textarea
             class="form-control bg-white rounded-3"
+            name="observatii"
             id="observatii"
-            rows="5">{{ old('observatii', $subcontractant->observatii ?? '') }}</textarea>
+            rows="5">{{ old('observatii', $client->observatii ?? '') }}</textarea>
     </div>
 </div>
 
@@ -206,7 +207,7 @@
         <button type="submit" class="btn btn-primary text-white me-3 rounded-3">
             <i class="fa-solid fa-save me-1"></i> {{ $buttonText }}
         </button>
-        <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('subcontractanti.index')) }}">
+        <a class="btn btn-secondary rounded-3" href="{{ Session::get('returnUrl', route('clienti.index')) }}">
             Renunță
         </a>
     </div>

@@ -34,36 +34,28 @@ class Proiect extends Model
         return $this->belongsTo(ProiectTip::class, 'proiecte_tipuri_id');
     }
 
-    public function membri()
-    {
-        return $this->belongsToMany(Membru::class, 'membru_proiect')->withPivot('observatii')->orderBy('nume');
-    }
-
-    public function subcontractanti()
-    {
-        return $this->belongsToMany(Subcontractant::class, 'proiect_subcontractant')->withPivot('observatii')->orderBy('nume');
-    }
-
     public function fisiere()
     {
-        return $this->morphMany(Fisier::class, 'owner');
+        return $this->morphMany(Fisier::class, 'owner')->orderBy('nume_fisier');
     }
 
-    /**
-     * Get all of the emailuriTrimise for the Proiect
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function emailuriTrimise(): HasMany
+    public function clienti()
     {
-        return $this->hasMany(ProiectEmailTrimis::class, 'proiect_id');
+        return $this->belongsToMany(Client::class, 'client_proiect')->withPivot('observatii')->orderBy('nume');
     }
 
-    public function emailuriTrimiseCountForRecipient($destinatarId, $destinatarType)
+    // public function membriDtacArhitectura()
+    // {
+    //     return $this->belongsToMany(Membru::class, 'membru_proiect')
+    //         ->withPivot('id', 'tip', 'observatii')
+    //         ->wherePivot('tip', 'dtac_arhitectura')
+    //         ->orderBy('nume');
+    // }
+
+    public function membri()
     {
-        return $this->emailuriTrimise()
-                    ->where('destinatar_id', $destinatarId)
-                    ->where('destinatar_type', $destinatarType)
-                    ->count();
+        return $this->belongsToMany(Membru::class, 'membru_proiect')
+            ->withPivot('id', 'tip', 'observatii')
+            ->orderBy('nume');
     }
 }

@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Subcontractant;
-use App\Http\Requests\SubcontractantRequest;
+use App\Models\CLient;
+use App\Http\Requests\CLientRequest;
 use Carbon\Carbon;
 
-class SubcontractantController extends Controller
+class CLientController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class SubcontractantController extends Controller
         $searchNume = trim($request->searchNume);
         $searchTelefon = trim($request->searchTelefon);
 
-        $subcontractanti = Subcontractant::when($searchNume, function ($query, $searchNume) {
+        $clienti = CLient::when($searchNume, function ($query, $searchNume) {
                 return $query->where('nume', 'LIKE', "%{$searchNume}%");
             })
             ->when($searchTelefon, function ($query, $searchTelefon) {
@@ -31,7 +31,7 @@ class SubcontractantController extends Controller
             ->latest()
             ->simplePaginate(25);
 
-        return view('subcontractanti.index', compact('subcontractanti', 'searchNume', 'searchTelefon'));
+        return view('clienti.index', compact('clienti', 'searchNume', 'searchTelefon'));
     }
 
     /**
@@ -41,62 +41,62 @@ class SubcontractantController extends Controller
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
-        return view('subcontractanti.save');
+        return view('clienti.save');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SubcontractantRequest $request)
+    public function store(CLientRequest $request)
     {
         $data = $request->validated();
 
-        $subcontractant = Subcontractant::create($data);
+        $client = CLient::create($data);
 
-        return redirect($request->session()->get('returnUrl', route('subcontractanti.index')))
-            ->with('success', 'Subcontractantul <strong>' . e($subcontractant->nume) . '</strong> a fost adăugat cu succes!');
+        return redirect($request->session()->get('returnUrl', route('clienti.index')))
+            ->with('success', 'CLientul <strong>' . e($client->nume) . '</strong> a fost adăugat cu succes!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Subcontractant $subcontractant)
+    public function show(Request $request, CLient $client)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
-        return view('subcontractanti.show', compact('subcontractant'));
+        return view('clienti.show', compact('client'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Subcontractant $subcontractant)
+    public function edit(Request $request, CLient $client)
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
-        return view('subcontractanti.save', compact('subcontractant'));
+        return view('clienti.save', compact('client'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(SubcontractantRequest $request, Subcontractant $subcontractant)
+    public function update(CLientRequest $request, CLient $client)
     {
         $data = $request->validated();
 
-        $subcontractant->update($data);
+        $client->update($data);
 
-        return redirect($request->session()->get('returnUrl', route('subcontractanti.index')))
-            ->with('status', 'Subcontractantul <strong>' . e($subcontractant->nume) . '</strong> a fost modificat cu succes!');
+        return redirect($request->session()->get('returnUrl', route('clienti.index')))
+            ->with('status', 'CLientul <strong>' . e($client->nume) . '</strong> a fost modificat cu succes!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Subcontractant $subcontractant)
+    public function destroy(Request $request, CLient $client)
     {
-        $subcontractant->delete();
+        $client->delete();
 
-        return back()->with('status', 'Subcontractantul <strong>' . e($subcontractant->nume) . '</strong> a fost șters cu succes!');
+        return back()->with('status', 'CLientul <strong>' . e($client->nume) . '</strong> a fost șters cu succes!');
     }
 }

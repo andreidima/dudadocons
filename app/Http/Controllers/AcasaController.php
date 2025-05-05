@@ -17,21 +17,15 @@ class AcasaController extends Controller
         $startOfLastMonth = Carbon::now()->subMonth()->startOfMonth();
         $endOfLastMonth   = Carbon::now()->subMonth()->endOfMonth();
 
-        // 1. Count projects by data_contract
+        // 1. Count projects by created_at
         $allProiecteCount   = Proiect::count();
-        $proiecteThisMonth  = Proiect::whereDate('data_contract', '>=', $startOfThisMonth)->count();
-        $proiecteLastMonth  = Proiect::whereBetween('data_contract', [$startOfLastMonth, $endOfLastMonth])->count();
-
-        // 2. Group projects by stare_contract (status) and get counts for each group
-        $proiecteGroupedByStareContract = Proiect::select('stare_contract', DB::raw('COUNT(*) as total'))
-            ->groupBy('stare_contract')
-            ->get();
+        $proiecteThisMonth  = Proiect::whereDate('created_at', '>=', $startOfThisMonth)->count();
+        $proiecteLastMonth  = Proiect::whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])->count();
 
         return view('acasa', compact(
             'allProiecteCount',
             'proiecteThisMonth',
             'proiecteLastMonth',
-            'proiecteGroupedByStareContract'
         ));
     }
 }

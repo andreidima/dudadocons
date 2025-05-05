@@ -67,33 +67,53 @@
             <table class="table table-sm table-striped table-border border-dark table-hover rounded">
                 <thead class="text-white rounded">
                     <tr class="" style="">
-                        <th class="text-white culoare2">
+                        <th rowspan="2" class="text-white culoare2">
                             <i class="fa-solid fa-hashtag small"></i>
                         </th>
-                        <th class="text-white culoare2 small">
+                        <th rowspan="2" class="text-white culoare2 small">
                             <i class="fa-solid fa-clipboard-list"></i>
                             Tema de proiectare
                             <br>
                             <i class="fa-solid fa-file-contract"></i>
                             Contract
                         </th>
-                        <th class="text-white culoare2">
+                        <th rowspan="2" class="text-white culoare2">
                             <i class="fa-solid fa-handshake"></i>
                             Clienți
                         </th>
-                        <th class="text-white culoare2">
+                        <th colspan="3" class="text-white culoare2 text-center border">
                             DTAC
                         </th>
-                        <th class="text-white culoare2">
+                        <th colspan="3" class="text-white culoare2 text-center border">
                             PTh
                         </th>
-                        <th class="text-white culoare2">
+                        <th rowspan="2" class="text-white culoare2">
                             {{-- <i class="fa-solid fa-calendar-check"></i> --}}
                             Fișiere
                         </th>
-                        <th class="text-white culoare2 text-end">
+                        <th rowspan="2" class="text-white culoare2 text-end">
                             {{-- <i class="fa-solid fa-cogs"></i> --}}
                             Acțiuni
+                        </th>
+                    </tr>
+                    <tr class="" style="">
+                        <th class="text-white culoare2 text-center border">
+                            Arhitectură
+                        </th>
+                        <th class="text-white culoare2 text-center border">
+                            Structură
+                        </th>
+                        <th class="text-white culoare2 text-center border">
+                            Instalații
+                        </th>
+                        <th class="text-white culoare2 text-center border">
+                            Arhitectură
+                        </th>
+                        <th class="text-white culoare2 text-center border">
+                            Structură
+                        </th>
+                        <th class="text-white culoare2 text-center border">
+                            Instalații
                         </th>
                     </tr>
                 </thead>
@@ -120,77 +140,72 @@
                                 @endif
                             </td>
 
-                            @foreach (array_chunk($slots, 3) as $chunk)
-                            <td>
-                                @foreach($chunk as $slot)
-                                    <div class="mb-2">
-                                        {{-- Add button --}}
-                                        <div class="text-start d-flex m-0 p-0 align-items-center">
-                                            {{ $slot['label'] }}
-                                            <button class="btn btn-xs m-0 p-0"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#assignMembriModal"
-                                                data-action-url="{{ route('proiecte.assign.membri', [
-                                                    // 'proiectTip'=> $proiectTip->id,
-                                                    'proiectTip'=> 'proiecte',
-                                                    'proiect'   => $proiect->id,
-                                                ]) }}"
-                                                data-proiect-id="{{ $proiect->id }}"
-                                                data-tip="{{ $slot['key'] }}"
-                                                data-modal-title="{{ $proiect->tema_de_proiectare }} - {{ $slot['label'] }} - Adaugă membru">
-                                                <i class="fa-solid fa-square-plus text-success"></i>
-                                            </button>
-                                        </div>
+                            @foreach($slots as $slot)
+                                <td>
+                                    <div class="">
+                                        <ol class="m-0 ps-3">
+                                            @foreach ($proiect->membri->filter(fn($m) => $m->pivot->tip === $slot['key']) as $membru)
+                                                <li class="">
+                                                    <div class="d-flex m-0 p-0 align-items-center">
+                                                        <span class="me-2">
+                                                            <a href="{{ $membru->path() }}" style="text-decoration: none;">
+                                                                {{ $membru->nume }}
+                                                            </a>
+                                                        </span>
 
-                                        <div class="">
-                                            <ol class="m-0 ps-3">
-                                                @foreach ($proiect->membri->filter(fn($m) => $m->pivot->tip === $slot['key']) as $membru)
-                                                    <li class="">
-                                                        <div class="d-flex m-0 p-0 align-items-center">
-                                                            <span class="me-2">
-                                                                <a href="{{ $membru->path() }}" style="text-decoration: none;">
-                                                                    {{ $membru->nume }}
-                                                                </a>
-                                                            </span>
+                                                        {{-- Edit button --}}
+                                                        <button class="btn btn-xs btn-link py-0 px-1 edit-assignment"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#assignMembriModal"
+                                                                data-action-url="{{ route('proiecte.membri.modifica', [
+                                                                    'proiectTip'=> 'proiecte',
+                                                                    'proiect'   => $proiect->id,
+                                                                    'pivotMembruProiectId'   => $membru->pivot->id,
+                                                                ]) }}"
+                                                                data-proiect-id="{{ $proiect->id }}"
+                                                                data-tip="{{ $slot['key'] }}"
+                                                                data-observatii="{{ $membru->pivot->observatii }}"
+                                                                data-modal-title="{{ $proiect->tema_de_proiectare }} - {{ $slot['label'] }} - Modifică membru"
+                                                                data-pivot-membru-proiect-id="{{ $membru->pivot->id }}"
+                                                                data-member-id="{{ $membru->id }}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                        </button>
 
-                                                            {{-- Edit button --}}
-                                                            <button class="btn btn-xs btn-link py-0 px-1 edit-assignment"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#assignMembriModal"
-                                                                    data-action-url="{{ route('proiecte.membri.modifica', [
-                                                                        'proiectTip'=> 'proiecte',
-                                                                        'proiect'   => $proiect->id,
-                                                                        'pivotMembruProiectId'   => $membru->pivot->id,
-                                                                    ]) }}"
-                                                                    data-proiect-id="{{ $proiect->id }}"
-                                                                    data-tip="{{ $slot['key'] }}"
-                                                                    data-observatii="{{ $membru->pivot->observatii }}"
-                                                                    data-modal-title="{{ $proiect->tema_de_proiectare }} - {{ $slot['label'] }} - Modifică membru"
-                                                                    data-pivot-membru-proiect-id="{{ $membru->pivot->id }}"
-                                                                    data-member-id="{{ $membru->id }}">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                            </button>
-
-                                                            {{-- Delete button --}}
-                                                            <button class="btn btn-xs btn-link p-0 text-danger"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#confirmDeleteModal"
-                                                                    data-delete-url="{{ route('proiecte.membri.sterge', [
-                                                                        'proiectTip'           => 'proiecte',
-                                                                        'proiect'              => $proiect->id,
-                                                                        'pivotMembruProiectId' => $membru->pivot->id,
-                                                                    ]) }}"
-                                                                    data-modal-title="{{ $proiect->tema_de_proiectare }} - {{ $slot['label'] }} - Șterge membru">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ol>
-                                        </div>
+                                                        {{-- Delete button --}}
+                                                        <button class="btn btn-xs btn-link p-0 text-danger"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#confirmDeleteModal"
+                                                                data-delete-url="{{ route('proiecte.membri.sterge', [
+                                                                    'proiectTip'           => 'proiecte',
+                                                                    'proiect'              => $proiect->id,
+                                                                    'pivotMembruProiectId' => $membru->pivot->id,
+                                                                ]) }}"
+                                                                data-modal-title="{{ $proiect->tema_de_proiectare }} - {{ $slot['label'] }} - Șterge membru">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        </ol>
                                     </div>
-                                @endforeach
-                            </td>
+
+                                    {{-- Add button --}}
+                                    <div class="text-center">
+                                        <button class="btn btn-xs m-0 p-0"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#assignMembriModal"
+                                            data-action-url="{{ route('proiecte.assign.membri', [
+                                                // 'proiectTip'=> $proiectTip->id,
+                                                'proiectTip'=> 'proiecte',
+                                                'proiect'   => $proiect->id,
+                                            ]) }}"
+                                            data-proiect-id="{{ $proiect->id }}"
+                                            data-tip="{{ $slot['key'] }}"
+                                            data-modal-title="{{ $proiect->tema_de_proiectare }} - {{ $slot['label'] }} - Adaugă membru">
+                                            <i class="fa-solid fa-square-plus text-success"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             @endforeach
 
                             <td>

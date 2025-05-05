@@ -1,379 +1,361 @@
 @csrf
 
 <div id="datePicker" class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem darkcyan solid; background-color:rgb(241, 250, 250)">
-    <div class="col-lg-12 mb-4">
-        <label for="denumire_contract" class="mb-0 ps-3">Denumire Contract</label>
-        <textarea
-            class="form-control bg-white rounded-3"
-            name="denumire_contract"
-            id="denumire_contract"
-            rows="3">{{ old('denumire_contract', $proiect->denumire_contract ?? '') }}</textarea>
-    </div>
-
     <div class="col-lg-8 mb-4">
-        <label for="nr_contract" class="mb-0 ps-3">Nr. Contract</label>
+        <label for="tema_de_proiectare" class="mb-0 ps-3">Tema de proiectare<span class="text-danger">*</span></label>
         <input
             type="text"
             class="form-control bg-white rounded-3"
-            name="nr_contract"
-            id="nr_contract"
-            value="{{ old('nr_contract', $proiect->nr_contract ?? '') }}">
+            name="tema_de_proiectare"
+            id="tema_de_proiectare"
+            value="{{ old('tema_de_proiectare', $proiect->tema_de_proiectare ?? '') }}">
     </div>
-
-    <div class="col-lg-2 mb-4 text-center">
-        <label for="data_contract" class="mb-0 ps-0">Data Contract</label>
-        <vue-datepicker-next
-            id="data_contract"
-            data-veche="{{ old('data_contract', $proiect->data_contract ?? null) }}"
-            nume-camp-db="data_contract"
-            tip="date"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :latime="{ width: '125px' }"
-        ></vue-datepicker-next>
-    </div>
-
-    <div class="col-lg-2 mb-4 text-center">
-        <label for="data_limita_predare" class="mb-0 ps-0">Data Limită Predare</label>
-        <vue-datepicker-next
-            id="data_limita_predare"
-            data-veche="{{ old('data_limita_predare', $proiect->data_limita_predare ?? null) }}"
-            nume-camp-db="data_limita_predare"
-            tip="date"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :latime="{ width: '125px' }"
-        ></vue-datepicker-next>
-    </div>
-
-    <div class="col-lg-9 mb-4">
-        <label for="nr_proces_verbal_predare_primire" class="mb-0 ps-3">Nr. Proces Verbal Predare-Primire</label>
+    <div class="col-lg-4 mb-4">
+        <label for="contract" class="mb-0 ps-3">Contract</label>
         <input
             type="text"
             class="form-control bg-white rounded-3"
-            name="nr_proces_verbal_predare_primire"
-            id="nr_proces_verbal_predare_primire"
-            value="{{ old('nr_proces_verbal_predare_primire', $proiect->nr_proces_verbal_predare_primire ?? '') }}">
+            name="contract"
+            id="contract"
+            value="{{ old('contract', $proiect->contract ?? '') }}">
     </div>
-
-    <div class="col-lg-3 mb-4 text-center">
-        <label for="data_proces_verbal_predare_primire" class="mb-0 ps-0 small">Data Proces Verbal Predare-Primire</label>
-        <vue-datepicker-next
-            id="data_proces_verbal_predare_primire"
-            data-veche="{{ old('data_proces_verbal_predare_primire', $proiect->data_proces_verbal_predare_primire ?? null) }}"
-            nume-camp-db="data_proces_verbal_predare_primire"
-            tip="date"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :latime="{ width: '125px' }"
-        ></vue-datepicker-next>
-    </div>
-
-    <div class="col-lg-12 mb-4">
-        <label for="stare_contract" class="mb-0 ps-3">Stare Contract</label>
+    <div class="col-lg-6 mb-4">
+        <label for="oferta" class="mb-0 ps-3">Oferta</label>
         <input
             type="text"
             class="form-control bg-white rounded-3"
-            name="stare_contract"
-            id="stare_contract"
-            value="{{ old('stare_contract', $proiect->stare_contract ?? '') }}">
+            name="oferta"
+            id="oferta"
+            value="{{ old('oferta', $proiect->oferta ?? '') }}">
     </div>
-
-    @can('admin-action')
-        <div class="col-lg-3 mb-4">
-            <label for="pret" class="mb-0 ps-3">Preț</label>
-            <input
-                type="text"
-                class="form-control bg-white rounded-3"
-                name="pret"
-                id="pret"
-                value="{{ old('pret', $proiect->pret ?? '') }}">
-        </div>
-
-        <div class="col-lg-9 mb-4">
-            <label for="pret_observatii" class="mb-0 ps-3">Preț observații</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="pret_observatii"
-                id="pret_observatii"
-                rows="3">{{ old('pret_observatii', $proiect->pret_observatii ?? '') }}</textarea>
-        </div>
-    @endcan
+    <div class="col-lg-6 mb-4">
+        <label for="plati" class="mb-0 ps-3">Plăți</label>
+        <input
+            type="text"
+            class="form-control bg-white rounded-3"
+            name="plati"
+            id="plati"
+            value="{{ old('plati', $proiect->plati ?? '') }}">
+    </div>
 </div>
 
-@if(in_array($proiectTip->slug, ['civile', 'privati']))
-    <div class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
-        <div class="col-lg-12">
-            <!-- Where we mount our MembriSelector Vue app -->
-            <div id="membriSelectorApp">
-                <!-- Pass the data from the controller as JSON props -->
-                <membri-selector
-                    :all-membri='@json($allMembri)'
-                    :existing-membri='@json($existingMembri)'
-                >
-                </membri-selector>
-            </div>
+<div class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
+    <div class="col-lg-12">
+        <!-- Where we mount our ClientiSelector Vue app -->
+        <div id="clientiSelectorApp">
+            <!-- Pass the data from the controller as JSON props -->
+            <clienti-selector
+                :all-clienti='@json($allClienti)'
+                :existing-clienti='@json($existingClienti)'
+            >
+            </clienti-selector>
         </div>
     </div>
-@endif
-
-@if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati', 'pug']))
-    <div class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
-        <div class="col-lg-12">
-            <!-- Where we mount our SubcontractantiSelector Vue app -->
-            <div id="subcontractantiSelectorApp">
-                <!-- Pass the data from the controller as JSON props -->
-                <subcontractanti-selector
-                    :all-subcontractanti='@json($allSubcontractanti)'
-                    :existing-subcontractanti='@json($existingSubcontractanti)'
-                >
-                </subcontractanti-selector>
-            </div>
-        </div>
-    </div>
-@endif
+</div>
 
 <div id="datePicker" class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem darkcyan solid; background-color:rgb(241, 250, 250)">
-    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="cu" class="mb-0 ps-3">CU</label>
-            <input
-                type="text"
-                class="form-control bg-white rounded-3"
-                name="cu"
-                id="cu"
-                value="{{ old('cu', $proiect->cu ?? '') }}">
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['apa-canal', 'drumuri', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="nr_proiect" class="mb-0 ps-3">Nr. proiect</label>
-            <input
-                type="text"
-                class="form-control bg-white rounded-3"
-                name="nr_proiect"
-                id="nr_proiect"
-                value="{{ old('nr_proiect', $proiect->nr_proiect ?? '') }}">
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="studii_teren" class="mb-0 ps-3">Studii Teren</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="studii_teren"
-                id="studii_teren"
-                rows="5">{{ old('studii_teren', $proiect->studii_teren ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="avize" class="mb-0 ps-3">Avize</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="avize"
-                id="avize"
-                rows="5">{{ old('avize', $proiect->avize ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="faza" class="mb-0 ps-3">FAZA</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="faza"
-                id="faza"
-                rows="5">{{ old('faza', $proiect->faza ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="arhitectura" class="mb-0 ps-3">Arhitectură</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="arhitectura"
-                id="arhitectura"
-                rows="5">{{ old('arhitectura', $proiect->arhitectura ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="rezistenta" class="mb-0 ps-3">Rezistență</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="rezistenta"
-                id="rezistenta"
-                rows="5">{{ old('rezistenta', $proiect->rezistenta ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="instalatii" class="mb-0 ps-3">Instalații</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="instalatii"
-                id="instalatii"
-                rows="5">{{ old('instalatii', $proiect->instalatii ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['apa-canal']))
-        <div class="col-lg-6 mb-4">
-            <label for="tratare" class="mb-0 ps-3">Tratare</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="tratare"
-                id="tratare"
-                rows="5">{{ old('tratare', $proiect->tratare ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['apa-canal']))
-        <div class="col-lg-6 mb-4">
-            <label for="retele" class="mb-0 ps-3">Rețele</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="retele"
-                id="retele"
-                rows="5">{{ old('retele', $proiect->retele ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['drumuri']))
-        <div class="col-lg-6 mb-4">
-            <label for="partea_desenata" class="mb-0 ps-3">Partea desenată</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="partea_desenata"
-                id="partea_desenata"
-                rows="5">{{ old('partea_desenata', $proiect->partea_desenata ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['drumuri']))
-        <div class="col-lg-6 mb-4">
-            <label for="partea_scrisa" class="mb-0 ps-3">Partea scrisă</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="partea_scrisa"
-                id="partea_scrisa"
-                rows="5">{{ old('partea_scrisa', $proiect->partea_scrisa ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'apa-canal', 'drumuri', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="partea_economica" class="mb-0 ps-3">Partea Economică</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="partea_economica"
-                id="partea_economica"
-                rows="5">{{ old('partea_economica', $proiect->partea_economica ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['civile', 'privati']))
-        <div class="col-lg-6 mb-4">
-            <label for="autorizatie_de_construire" class="mb-0 ps-3">Autorizație de Construire</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="autorizatie_de_construire"
-                id="autorizatie_de_construire"
-                rows="5">{{ old('autorizatie_de_construire', $proiect->autorizatie_de_construire ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['achizitii']))
-        <div class="col-lg-6 mb-4">
-            <label for="documentatie_eligibilitate" class="mb-0 ps-3">Documentație eligibilitate</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="documentatie_eligibilitate"
-                id="documentatie_eligibilitate"
-                rows="5">{{ old('documentatie_eligibilitate', $proiect->documentatie_eligibilitate ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['achizitii']))
-        <div class="col-lg-6 mb-4">
-            <label for="personal" class="mb-0 ps-3">Personal</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="personal"
-                id="personal"
-                rows="5">{{ old('personal', $proiect->personal ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['achizitii']))
-        <div class="col-lg-6 mb-4">
-            <label for="formulare" class="mb-0 ps-3">Formulare</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="formulare"
-                id="formulare"
-                rows="5">{{ old('formulare', $proiect->formulare ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['achizitii']))
-        <div class="col-lg-6 mb-4">
-            <label for="propunere_tehnica" class="mb-0 ps-3">Propunere tehnică</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="propunere_tehnica"
-                id="propunere_tehnica"
-                rows="5">{{ old('propunere_tehnica', $proiect->propunere_tehnica ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['achizitii']))
-        <div class="col-lg-6 mb-4">
-            <label for="propunere_financiara" class="mb-0 ps-3">Propunere financiară</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="propunere_financiara"
-                id="propunere_financiara"
-                rows="5">{{ old('propunere_financiara', $proiect->propunere_financiara ?? '') }}</textarea>
-        </div>
-    @endif
-
-    @if(in_array($proiectTip->slug, ['achizitii']))
-        <div class="col-lg-6 mb-4">
-            <label for="stadiu_incarcare" class="mb-0 ps-3">Stadiu încărcare</label>
-            <textarea
-                class="form-control bg-white rounded-3"
-                name="stadiu_incarcare"
-                id="stadiu_incarcare"
-                rows="5">{{ old('stadiu_incarcare', $proiect->stadiu_incarcare ?? '') }}</textarea>
-        </div>
-    @endif
-
-    <div class="col-lg-12 mb-4">
-        <label for="comentarii" class="mb-0 ps-3">Comentarii</label>
-        <textarea
+    <div class="col-lg-4 mb-4">
+        <label for="obtinere_certificat_urbanism" class="mb-0 ps-3">Obtinere Certificat Urbanism</label>
+        <input
+            type="text"
             class="form-control bg-white rounded-3"
-            name="comentarii"
-            id="comentarii"
-            rows="5">{{ old('comentarii', $proiect->comentarii ?? '') }}</textarea>
+            name="obtinere_certificat_urbanism"
+            id="obtinere_certificat_urbanism"
+            value="{{ old('obtinere_certificat_urbanism', $proiect->obtinere_certificat_urbanism ?? '') }}">
     </div>
 
-    <div class="col-lg-12 mb-4">
-        <label for="observatii" class="mb-0 ps-3">Observații</label>
-        <textarea
-            class="form-control bg-white rounded-3"
-            name="observatii"
-            id="observatii"
-            rows="5">{{ old('observatii', $proiect->observatii ?? '') }}</textarea>
+    <div class="col-lg-4 mb-4">
+        <label for="dtoe" class="mb-0 ps-3">DTOE</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="dtoe" id="dtoe"
+            value="{{ old('dtoe', $proiect->dtoe ?? '') }}">
     </div>
 </div>
+
+<div class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem #e66800 solid; background-color:#fff9f5">
+    <div class="col-lg-4 mb-4">
+        <label for="certificat_de_urbanism" class="mb-0 ps-3">Certificat de Urbanism</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="certificat_de_urbanism" id="certificat_de_urbanism"
+            value="{{ old('certificat_de_urbanism', $proiect->certificat_de_urbanism ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="alimentare_cu_apa" class="mb-0 ps-3">Alimentare cu Apa</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="alimentare_cu_apa" id="alimentare_cu_apa"
+            value="{{ old('alimentare_cu_apa', $proiect->alimentare_cu_apa ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="canalizare" class="mb-0 ps-3">Canalizare</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="canalizare" id="canalizare"
+            value="{{ old('canalizare', $proiect->canalizare ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="transport_urban" class="mb-0 ps-3">Transport Urban</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="transport_urban" id="transport_urban"
+            value="{{ old('transport_urban', $proiect->transport_urban ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="nomenclator" class="mb-0 ps-3">Nomenclator</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="nomenclator" id="nomenclator"
+            value="{{ old('nomenclator', $proiect->nomenclator ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="alimentare_cu_energie_electrica" class="mb-0 ps-3">Alimentare cu Energie Electrica</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="alimentare_cu_energie_electrica" id="alimentare_cu_energie_electrica"
+            value="{{ old('alimentare_cu_energie_electrica', $proiect->alimentare_cu_energie_electrica ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="gaze_naturale" class="mb-0 ps-3">Gaze Naturale</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="gaze_naturale" id="gaze_naturale"
+            value="{{ old('gaze_naturale', $proiect->gaze_naturale ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="telefonizare" class="mb-0 ps-3">Telefonizare</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="telefonizare" id="telefonizare"
+            value="{{ old('telefonizare', $proiect->telefonizare ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="salubritate" class="mb-0 ps-3">Salubritate</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="salubritate" id="salubritate"
+            value="{{ old('salubritate', $proiect->salubritate ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="alimentare_cu_energie_termica" class="mb-0 ps-3">Alimentare cu Energie Termica</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="alimentare_cu_energie_termica" id="alimentare_cu_energie_termica"
+            value="{{ old('alimentare_cu_energie_termica', $proiect->alimentare_cu_energie_termica ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="isu" class="mb-0 ps-3">ISU</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="isu" id="isu"
+            value="{{ old('isu', $proiect->isu ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="dsp" class="mb-0 ps-3">DSP</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="dsp" id="dsp"
+            value="{{ old('dsp', $proiect->dsp ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="dsv" class="mb-0 ps-3">DSV</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="dsv" id="dsv"
+            value="{{ old('dsv', $proiect->dsv ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="anif" class="mb-0 ps-3">ANIF</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="anif" id="anif"
+            value="{{ old('anif', $proiect->anif ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="ospa" class="mb-0 ps-3">OSPA</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="ospa" id="ospa"
+            value="{{ old('ospa', $proiect->ospa ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="apia" class="mb-0 ps-3">APIA</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="apia" id="apia"
+            value="{{ old('apia', $proiect->apia ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="daj" class="mb-0 ps-3">DAJ</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="daj" id="daj"
+            value="{{ old('daj', $proiect->daj ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="mediu" class="mb-0 ps-3">Mediu</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="mediu" id="mediu"
+            value="{{ old('mediu', $proiect->mediu ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="arie_protejata" class="mb-0 ps-3">Arie Protejata</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="arie_protejata" id="arie_protejata"
+            value="{{ old('arie_protejata', $proiect->arie_protejata ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="studiu_geotehnic" class="mb-0 ps-3">Studiu Geotehnic</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="studiu_geotehnic" id="studiu_geotehnic"
+            value="{{ old('studiu_geotehnic', $proiect->studiu_geotehnic ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="studiu_topo" class="mb-0 ps-3">Studiu Topo</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="studiu_topo" id="studiu_topo"
+            value="{{ old('studiu_topo', $proiect->studiu_topo ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="verificare_tehnica_structura" class="mb-0 ps-3">Verificare Tehnica Structura</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="verificare_tehnica_structura" id="verificare_tehnica_structura"
+            value="{{ old('verificare_tehnica_structura', $proiect->verificare_tehnica_structura ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="verificare_tehnica_instalatii" class="mb-0 ps-3">Verificare Tehnica Instalatii</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="verificare_tehnica_instalatii" id="verificare_tehnica_instalatii"
+            value="{{ old('verificare_tehnica_instalatii', $proiect->verificare_tehnica_instalatii ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="dovada_oar" class="mb-0 ps-3">Dovada OAR</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="dovada_oar" id="dovada_oar"
+            value="{{ old('dovada_oar', $proiect->dovada_oar ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="ipj" class="mb-0 ps-3">IPJ</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="ipj" id="ipj"
+            value="{{ old('ipj', $proiect->ipj ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="cj" class="mb-0 ps-3">CJ</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="cj" id="cj"
+            value="{{ old('cj', $proiect->cj ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="conpet" class="mb-0 ps-3">CONPET</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="conpet" id="conpet"
+            value="{{ old('conpet', $proiect->conpet ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="cfr" class="mb-0 ps-3">CFR</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="cfr" id="cfr"
+            value="{{ old('cfr', $proiect->cfr ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="sga" class="mb-0 ps-3">SGA</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="sga" id="sga"
+            value="{{ old('sga', $proiect->sga ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="nzeb" class="mb-0 ps-3">NZEB</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="nzeb" id="nzeb"
+            value="{{ old('nzeb', $proiect->nzeb ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="saer" class="mb-0 ps-3">SAER</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="saer" id="saer"
+            value="{{ old('saer', $proiect->saer ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="expertiza_tehnica" class="mb-0 ps-3">Expertiza Tehnica</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="expertiza_tehnica" id="expertiza_tehnica"
+            value="{{ old('expertiza_tehnica', $proiect->expertiza_tehnica ?? '') }}">
+    </div>
+</div>
+
+<div id="datePicker" class="row mb-4 pt-2 rounded-3" style="border:1px solid #e9ecef; border-left:0.25rem darkcyan solid; background-color:rgb(241, 250, 250)">
+    <div class="col-lg-4 mb-4">
+        <label for="notare_ac_la_ocpi" class="mb-0 ps-3">Notare A.C. la OCPI</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="notare_ac_la_ocpi" id="notare_ac_la_ocpi"
+            value="{{ old('notare_ac_la_ocpi', $proiect->notare_ac_la_ocpi ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="comunicare_incepere_lucrari_ziar" class="mb-0 ps-3">Comunicare Incepere Lucrari Ziar</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="comunicare_incepere_lucrari_ziar" id="comunicare_incepere_lucrari_ziar"
+            value="{{ old('comunicare_incepere_lucrari_ziar', $proiect->comunicare_incepere_lucrari_ziar ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="comunicare_incepere_lucrari_isc" class="mb-0 ps-3">Comunicare Incepere Lucrari ISC</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="comunicare_incepere_lucrari_isc" id="comunicare_incepere_lucrari_isc"
+            value="{{ old('comunicare_incepere_lucrari_isc', $proiect->comunicare_incepere_lucrari_isc ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="comunicare_incheiere_lucrari_primarie" class="mb-0 ps-3">Comunicare Incheiere Lucrari Primarie</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="comunicare_incheiere_lucrari_primarie" id="comunicare_incheiere_lucrari_primarie"
+            value="{{ old('comunicare_incheiere_lucrari_primarie', $proiect->comunicare_incheiere_lucrari_primarie ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="dirigentie_santier" class="mb-0 ps-3">Dirigentie Santier</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="dirigentie_santier" id="dirigentie_santier"
+            value="{{ old('dirigentie_santier', $proiect->dirigentie_santier ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="receptie_depunere_documentatie" class="mb-0 ps-3">Receptie (Depunere Documentatie)</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="receptie_depunere_documentatie" id="receptie_depunere_documentatie"
+            value="{{ old('receptie_depunere_documentatie', $proiect->receptie_depunere_documentatie ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="edificare_depunere_documentatie" class="mb-0 ps-3">Edificare (Depunere Documentatie)</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="edificare_depunere_documentatie" id="edificare_depunere_documentatie"
+            value="{{ old('edificare_depunere_documentatie', $proiect->edificare_depunere_documentatie ?? '') }}">
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <label for="inscriere_constructie" class="mb-0 ps-3">Inscriere Constructie</label>
+        <input type="text" class="form-control bg-white rounded-3"
+            name="inscriere_constructie" id="inscriere_constructie"
+            value="{{ old('inscriere_constructie', $proiect->inscriere_constructie ?? '') }}">
+    </div>
+</div>
+
 
 <div class="row">
     <div id="disableOnceButton" class="col-lg-12 px-4 py-2 mb-0 text-center">

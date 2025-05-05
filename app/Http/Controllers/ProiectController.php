@@ -7,16 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Proiect;
 use App\Http\Requests\ProiectRequest;
 use App\Models\Membru;
-use App\Models\Subcontractant;
+use App\Models\MembruProiect;
+use App\Models\Client;
 use App\Models\ProiectTip;
-use App\Models\ProiectEmailTrimis;
 
 use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Mail;
-use App\Mail\MemberAddedToProject;
-use App\Mail\MemberRemovedFromProject;
-use App\Mail\ProjectComentariiUpdated;
 
 class ProiectController extends Controller
 {
@@ -27,50 +24,28 @@ class ProiectController extends Controller
     {
         $request->session()->forget('returnUrl');
 
-        $searchDenumire = trim($request->searchDenumire);
-        $searchNrContract = trim($request->searchNrContract);
-        $searchIntervalDataContract = trim($request->searchIntervalDataContract);
-        $searchMembru = trim($request->searchMembru);
-        $searchSubcontractant = trim($request->searchSubcontractant);
+        $searchTemaDeProiectare = trim($request->searchTemaDeProiectare);
+        $searchContract = trim($request->searchContract);
+        $searchClient = trim($request->searchClient);
 
-        $proiecte = Proiect::with('proiectTip', 'membri', 'subcontractanti', 'fisiere', 'emailuriTrimise')
+        $proiecte = Proiect::with('proiectTip', 'clienti', 'fisiere', 'membri')
             ->where('proiecte_tipuri_id', $proiectTip->id ?? null)
-            ->when($searchDenumire, function ($query, $searchDenumire) {
-                return $query->where('denumire_contract', 'LIKE', "%{$searchDenumire}%");
+            ->when($searchTemaDeProiectare, function ($query, $searchTemaDeProiectare) {
+                return $query->where('tema_de_proiectare', 'LIKE', "%{$searchTemaDeProiectare}%");
             })
-            ->when($searchNrContract, function ($query, $searchNrContract) {
-                return $query->where('nr_contract', 'LIKE', "%{$searchNrContract}%");
+            ->when($searchContract, function ($query, $searchContract) {
+                return $query->where('contract', 'LIKE', "%{$searchContract}%");
             })
-            ->when($searchIntervalDataContract, function ($query, $searchIntervalDataContract) {
-                $dates = explode(',', $searchIntervalDataContract);
-                return $query->whereBetween('data_contract', [$dates[0] ?? null, $dates[1] ?? null]);
-            })
-            ->when($searchMembru, function ($query, $searchMembru) {
-                return $query->whereHas('membri', function ($q) use ($searchMembru) {
-                    $q->where('nume', 'LIKE', "%{$searchMembru}%");
+            ->when($searchClient, function ($query, $searchClient) {
+                return $query->whereHas('clienti', function ($q) use ($searchClient) {
+                    $q->where('nume', 'LIKE', "%{$searchClient}%");
                 });
             })
-            ->when($searchSubcontractant, function ($query, $searchSubcontractant) {
-                return $query->whereHas('subcontractanti', function ($q) use ($searchSubcontractant) {
-                    $q->where('nume', 'LIKE', "%{$searchSubcontractant}%");
-                });
-            })
-            ->orderByRaw("
-                CASE
-                    WHEN data_proces_verbal_predare_primire IS NULL THEN 0 ELSE 1
-                END ASC, -- Active projects first, closed ones last
-                CASE
-                    WHEN data_limita_predare IS NOT NULL AND data_limita_predare < NOW()
-                        THEN 0 -- Overdue projects first
-                    WHEN data_limita_predare IS NOT NULL AND data_limita_predare >= NOW()
-                        THEN 1 -- Upcoming deadlines next
-                    ELSE 2 -- NULL deadlines last
-                END ASC,
-                data_limita_predare ASC -- Sort overdue by most days overdue, upcoming by closest deadline
-            ")
             ->simplePaginate(25);
 
-        return view('proiecte.index', compact('proiectTip', 'proiecte', 'searchDenumire', 'searchNrContract', 'searchIntervalDataContract', 'searchMembru', 'searchSubcontractant'));
+        $membri = Membru::select('id','nume')->orderBy('nume')->get();
+
+        return view('proiecte.index', compact('proiectTip', 'proiecte', 'membri', 'searchTemaDeProiectare', 'searchContract', 'searchClient'));
     }
 
     /**
@@ -87,10 +62,10 @@ class ProiectController extends Controller
         $existingMembri = []; // empty array
 
         // Get all subcontractanti (only the necessary fields)
-        $allSubcontractanti = Subcontractant::select('id','nume')->orderBy('nume')->get();
-        $existingSubcontractanti = []; // empty array
+        $allClienti = Client::select('id','nume')->orderBy('nume')->get();
+        $existingClienti = []; // empty array
 
-        return view('proiecte.save', compact('proiectTip', 'allMembri', 'existingMembri', 'allSubcontractanti', 'existingSubcontractanti'));
+        return view('proiecte.save', compact('proiectTip', 'allMembri', 'existingMembri', 'allClienti', 'existingClienti'));
     }
 
     /**
@@ -99,108 +74,22 @@ class ProiectController extends Controller
     public function store(ProiectRequest $request,ProiectTip $proiectTip)
     {
         // Exclude the custom members and subcontractants arrays from the general data.
-        $data = $request->safe()->except(['membri', 'subcontractanti']);
+        $data = $request->safe()->except(['membri', 'clienti']);
         $proiect = Proiect::create($data);
 
-        // Process members data: create an array suitable for sync()
-        $membri = $request->safe()->input('membri', []);
-        $syncMembri = [];
-        foreach ($membri as $membru) {
-            $syncMembri[$membru['id']] = [
-                'observatii' => (isset($membru['observatii']) && trim($membru['observatii']) !== '')
-                ? $membru['observatii']
+        // Process clients data: create an array suitable for sync()
+        $clienti = $request->safe()->input('clienti', []);
+        $syncClienti = [];
+        foreach ($clienti as $client) {
+            $syncClienti[$client['id']] = [
+                'observatii' => (isset($client['observatii']) && trim($client['observatii']) !== '')
+                ? $client['observatii']
                 : null,
             ];
         }
 
-        // Process subcontractants data: create an array suitable for sync()
-        $subcontractanti = $request->safe()->input('subcontractanti', []);
-        $syncSubcontractanti = [];
-        foreach ($subcontractanti as $subcontractant) {
-            $syncSubcontractanti[$subcontractant['id']] = [
-                'observatii' => (isset($subcontractant['observatii']) && trim($subcontractant['observatii']) !== '')
-                    ? $subcontractant['observatii']
-                    : null,
-            ];
-        }
-
         // Sync the relations with the pivot data (observatii)
-        $proiect->membri()->sync($syncMembri);
-        $proiect->subcontractanti()->sync($syncSubcontractanti);
-
-
-        // === Email Notification for New Members ===
-        $errors = [];
-
-        // Build recipient array from the $membri array (all are new, since this is a new project)
-        $addedRecipients = [];
-        foreach ($membri as $item) {
-            $member = Membru::find($item['id']);
-            if ($member && filter_var($member->email, FILTER_VALIDATE_EMAIL)) {
-                $addedRecipients[] = [
-                    'id'      => $member->id,
-                    'email'   => $member->email,
-                    'nume'    => $member->nume,
-                ];
-            } else {
-                $errorMessage = $member
-                    ? "Emailul membrului {$member->nume} este invalid, motiv pentru care nu i s-a putut trimite email."
-                    : "Email invalid pentru un membru necunoscut.";
-                $errors[] = $errorMessage;
-                // Log the invalid email
-                ProiectEmailTrimis::create([
-                    'proiect_id'       => $proiect->id,
-                    'destinatar_id'    => $member ? $member->id : 0,
-                    'destinatar_type'  => 'membru',
-                    'email_destinatar' => $member ? $member->email : 'unknown',
-                    'email_subiect'    => "Aplicatie Alma Consulting - Ai fost adăugat la proiectul " . Str::limit($proiect->denumire_contract, 50),
-                    'email_mesaj'      => $errorMessage,
-                    'sent_at'          => now(),
-                    'error_code'       => "INVALID_EMAIL",
-                    'error_message'    => $errorMessage,
-                ]);
-            }
-        }
-
-        // Send bulk email only if we have valid recipient emails
-        if (!empty($addedRecipients)) {
-            $emailsForBulk = array_column($addedRecipients, 'email');
-            try {
-                $mail = new MemberAddedToProject($proiect);
-                $mail->subject = "Aplicatie Alma Consulting - Ai fost adăugat la proiectul " . Str::limit($proiect->denumire_contract, 50);
-                Mail::to($emailsForBulk)->send($mail);
-                // Log success for each recipient.
-                foreach ($addedRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Ai fost adăugat la proiect.',
-                        'sent_at'          => now(),
-                        'error_code'       => null,
-                        'error_message'    => null,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                // Log error for each recipient if bulk sending fails.
-                foreach ($addedRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Ai fost adăugat la proiect.',
-                        'sent_at'          => now(),
-                        'error_code'       => $e->getCode(),
-                        'error_message'    => $e->getMessage(),
-                    ]);
-                }
-                $errors[] = "Nu s-a putut trimite emailul pentru adăugare: " . $e->getMessage();
-            }
-        }
+        $proiect->clienti()->sync($syncClienti);
 
         // Optionally, flash errors to the session so that the operator is informed.
         if (!empty($errors)) {
@@ -221,22 +110,6 @@ class ProiectController extends Controller
         return view('proiecte.show', compact('proiectTip', 'proiect'));
     }
 
-    public function showEmailuri(Request $request,ProiectTip $proiectTip, $proiect, $destinatar_type, $destinatar_id)
-    {
-        $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
-
-        // Load the project along with its sent emails
-        $proiect = Proiect::with('emailuriTrimise')->findOrFail($proiect);
-
-        // Filter emails for this specific destinatar within the project
-        $emailuri = $proiect->emailuriTrimise()
-            ->where('destinatar_id', $destinatar_id)
-            ->where('destinatar_type', $destinatar_type)
-            ->orderBy('sent_at', 'desc')
-            ->get();
-
-        return view('proiecte.showEmailuri', compact('proiectTip', 'proiect', 'emailuri', 'destinatar_type', 'destinatar_id'));
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -245,43 +118,26 @@ class ProiectController extends Controller
     {
         $request->session()->get('returnUrl') ?: $request->session()->put('returnUrl', url()->previous());
 
-        // Get all membri
-        $allMembri = Membru::select('id','nume')
+        // Get all clients
+        $allClienti = Client::select('id','nume')
             ->orderBy('nume')
             ->get();
 
-        // Retrive existing membri with pivot data for observatii
-        $existingMembri = $proiect
-            ->membri()  // belongsToMany relationship with pivot data
-            ->select('membri.id', 'membri.nume') // note the table name
+        // Retrive existing clienti with pivot data for observatii
+        $existingClienti = $proiect
+            ->clienti()  // belongsToMany relationship with pivot data
+            ->select('clienti.id', 'clienti.nume') // note the table name
             ->get()
-            ->map(function ($membru) {
-                $membru->observatii = $membru->pivot->observatii; // add observatii from the pivot
-                return $membru;
-            });
-
-        // Get all subcontractanti
-        $allSubcontractanti = Subcontractant::select('id','nume')
-            ->orderBy('nume')
-            ->get();
-
-        // Retrieve existing subcontractanti with pivot data for observatii
-        $existingSubcontractanti = $proiect
-            ->subcontractanti()  // belongsToMany relationship with pivot data
-            ->select('subcontractanti.id', 'subcontractanti.nume') // note the table name
-            ->get()
-            ->map(function ($subcontractant) {
-                $subcontractant->observatii = $subcontractant->pivot->observatii; // add observatii from the pivot
-                return $subcontractant;
+            ->map(function ($client) {
+                $client->observatii = $client->pivot->observatii; // add observatii from the pivot
+                return $client;
             });
 
         return view('proiecte.save', compact(
             'proiectTip',
             'proiect',
-            'allMembri',
-            'existingMembri',
-            'allSubcontractanti',
-            'existingSubcontractanti'
+            'allClienti',
+            'existingClienti',
         ));
     }
 
@@ -291,267 +147,22 @@ class ProiectController extends Controller
     public function update(ProiectRequest $request, ProiectTip $proiectTip, Proiect $proiect)
     {
         // Exclude the new members/subcontractanti arrays from the general data.
-        $data = $request->safe()->except(['membri', 'subcontractanti']);
+        $data = $request->safe()->except(['clienti']);
         $proiect->update($data);
 
-        // === STEP 1: Capture the old member IDs BEFORE syncing ===
-        $oldMemberIds = $proiect->membri()->pluck('membri.id')->toArray();
-
-        // === STEP 2: Process membri data from request to build a sync array ===
-        $membri = $request->safe()->input('membri', []);
-        $syncMembri = [];
-        foreach ($membri as $membru) {
-            $syncMembri[$membru['id']] = [
-                'observatii' => (isset($membru['observatii']) && trim($membru['observatii']) !== '')
-                    ? $membru['observatii']
-                    : null,
-            ];
-        }
-        // Build an array of new member IDs for comparison.
-        $newMemberIds = array_map(fn($item) => $item['id'], $membri);
-
-        // === STEP 3: Process subcontractanti data ===
-        $subcontractanti = $request->safe()->input('subcontractanti', []);
-        $syncSubcontractanti = [];
-        foreach ($subcontractanti as $subcontractant) {
-            $syncSubcontractanti[$subcontractant['id']] = [
-                'observatii' => (isset($subcontractant['observatii']) && trim($subcontractant['observatii']) !== '')
-                    ? $subcontractant['observatii']
+        // === STEP 2: Process clienti data from request to build a sync array ===
+        $clienti = $request->safe()->input('clienti', []);
+        $syncClienti = [];
+        foreach ($clienti as $client) {
+            $syncClienti[$client['id']] = [
+                'observatii' => (isset($client['observatii']) && trim($client['observatii']) !== '')
+                    ? $client['observatii']
                     : null,
             ];
         }
 
-        // === STEP 4: Determine which members were added and which removed ===
-        $addedMemberIds = array_diff($newMemberIds, $oldMemberIds);
-        $removedMemberIds = array_diff($oldMemberIds, $newMemberIds);
-
-        // === STEP 5: Sync the relationships with the pivot data ===
-        $proiect->membri()->sync($syncMembri);
-        $proiect->subcontractanti()->sync($syncSubcontractanti);
-
-        // === STEP 6: Prepare to send email notifications and log them ===
-        $errors = [];
-
-        /*
-        * Build recipient arrays.
-        * Each recipient is stored as an associative array with keys:
-        * 'id', 'email', and 'nume'
-        */
-
-        // --- Prepare recipients for added members ---
-        $addedRecipients = [];
-        foreach ($addedMemberIds as $memberId) {
-            $member = Membru::find($memberId);
-            if ($member && filter_var($member->email, FILTER_VALIDATE_EMAIL)) {
-                $addedRecipients[] = [
-                    'id'      => $member->id,
-                    'email'   => $member->email,
-                    'nume'    => $member->nume,
-                ];
-            } else {
-                // Create a friendly error message using the member's name.
-                $errorMessage = $member
-                    ? "Emailul membrului {$member->nume} este invalid, motiv pentru care nu i s-a putut trimite email."
-                    : "Email invalid pentru un membru necunoscut.";
-                $errors[] = $errorMessage;
-                // Log the invalid email as well.
-                ProiectEmailTrimis::create([
-                    'proiect_id'       => $proiect->id,
-                    'destinatar_id'    => $member ? $member->id : 0,
-                    'destinatar_type'  => 'membru',
-                    'email_destinatar' => $member ? $member->email : 'unknown',
-                    'email_subiect'    => "Aplicatie Alma Consulting - Ai fost adăugat la proiectul " . $proiect->denumire_contract,
-                    'email_mesaj'      => $errorMessage,
-                    'sent_at'          => now(),
-                    'error_code'       => "INVALID_EMAIL",
-                    'error_message'    => $errorMessage,
-                ]);
-            }
-        }
-
-        // --- Prepare recipients for removed members ---
-        $removedRecipients = [];
-        foreach ($removedMemberIds as $memberId) {
-            $member = Membru::find($memberId);
-            if ($member && filter_var($member->email, FILTER_VALIDATE_EMAIL)) {
-                $removedRecipients[] = [
-                    'id'      => $member->id,
-                    'email'   => $member->email,
-                    'nume'    => $member->nume,
-                ];
-            } else {
-                $errorMessage = $member
-                    ? "Emailul membrului {$member->nume} este invalid, motiv pentru care nu i s-a putut trimite email."
-                    : "Email invalid pentru un membru necunoscut.";
-                $errors[] = $errorMessage;
-                ProiectEmailTrimis::create([
-                    'proiect_id'       => $proiect->id,
-                    'destinatar_id'    => $member ? $member->id : 0,
-                    'destinatar_type'  => 'membru',
-                    'email_destinatar' => $member ? $member->email : 'unknown',
-                    'email_subiect'    => "Aplicatie Alma Consulting - Ai fost eliminat din proiectul " . $proiect->denumire_contract,
-                    'email_mesaj'      => $errorMessage,
-                    'sent_at'          => now(),
-                    'error_code'       => "INVALID_EMAIL",
-                    'error_message'    => $errorMessage,
-                ]);
-            }
-        }
-
-        // --- Prepare recipients for comentarii changes, excluding newly added members --- ---
-        $commentaryRecipients = [];
-        if ($proiect->wasChanged('comentarii')) {
-            foreach ($proiect->membri as $member) {
-                // Skip newly added members
-                if (in_array($member->id, $addedMemberIds)) {
-                    continue;
-                }
-                if ($member && filter_var($member->email, FILTER_VALIDATE_EMAIL)) {
-                    $commentaryRecipients[] = [
-                        'id'      => $member->id,
-                        'email'   => $member->email,
-                        'nume'    => $member->nume,
-                    ];
-                } else {
-                    $errorMessage = $member
-                        ? "Emailul membrului {$member->nume} este invalid, motiv pentru care nu i s-a putut trimite email."
-                        : "Email invalid pentru un membru necunoscut.";
-                    $errors[] = $errorMessage;
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $member ? $member->id : 0,
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $member ? $member->email : 'unknown',
-                        'email_subiect'    => "Aplicatie Alma Consulting - Comentariile au fost actualizate pentru proiectul " . $proiect->denumire_contract,
-                        'email_mesaj'      => $errorMessage,
-                        'sent_at'          => now(),
-                        'error_code'       => "INVALID_EMAIL",
-                        'error_message'    => $errorMessage,
-                    ]);
-                }
-            }
-        }
-
-        /*
-        * Now send one bulk email per event.
-        * For each event, if the bulk email sending fails,
-        * we catch the exception and log the error for each recipient.
-        */
-
-        // --- Send one email for added members ---
-        if (!empty($addedRecipients)) {
-            $emailsForBulk = array_column($addedRecipients, 'email');
-            try {
-                $mail = new MemberAddedToProject($proiect);
-                $mail->subject = "Aplicatie Alma Consulting - Ai fost adăugat la proiectul " . Str::limit($proiect->denumire_contract, 50);
-                Mail::to($emailsForBulk)->send($mail);
-                // Log success for each recipient.
-                foreach ($addedRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Ai fost adăugat la proiect.',
-                        'sent_at'          => now(),
-                        'error_code'       => null,
-                        'error_message'    => null,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                foreach ($addedRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Ai fost adăugat la proiect.',
-                        'sent_at'          => now(),
-                        'error_code'       => $e->getCode(),
-                        'error_message'    => $e->getMessage(),
-                    ]);
-                }
-                $errors[] = "Nu s-a putut trimite emailul pentru adăugare: " . $e->getMessage();
-            }
-        }
-
-        // --- Send one email for removed members ---
-        if (!empty($removedRecipients)) {
-            try {
-                $mail = new MemberRemovedFromProject($proiect, null);
-                $mail->subject = "Aplicatie Alma Consulting - Ai fost eliminat din proiectul " . Str::limit($proiect->denumire_contract, 50);
-                $emailsForBulk = array_column($removedRecipients, 'email');
-                Mail::to($emailsForBulk)->send($mail);
-                foreach ($removedRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Ai fost eliminat din proiect.',
-                        'sent_at'          => now(),
-                        'error_code'       => null,
-                        'error_message'    => null,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                foreach ($removedRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Ai fost eliminat din proiect.',
-                        'sent_at'          => now(),
-                        'error_code'       => $e->getCode(),
-                        'error_message'    => $e->getMessage(),
-                    ]);
-                }
-                $errors[] = "Nu s-a putut trimite emailul pentru eliminare: " . $e->getMessage();
-            }
-        }
-
-        // --- Send one email for comentarii changes ---
-        if ($proiect->wasChanged('comentarii') && !empty($commentaryRecipients)) {
-            try {
-                $mail = new ProjectComentariiUpdated($proiect);
-                $mail->subject = "Aplicatie Alma Consulting - Comentariile au fost actualizate pentru proiectul " . Str::limit($proiect->denumire_contract, 50);
-                $emailsForBulk = array_column($commentaryRecipients, 'email');
-                Mail::to($emailsForBulk)->send($mail);
-                foreach ($commentaryRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Comentariile proiectului au fost actualizate.',
-                        'sent_at'          => now(),
-                        'error_code'       => null,
-                        'error_message'    => null,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                foreach ($commentaryRecipients as $recipient) {
-                    ProiectEmailTrimis::create([
-                        'proiect_id'       => $proiect->id,
-                        'destinatar_id'    => $recipient['id'],
-                        'destinatar_type'  => 'membru',
-                        'email_destinatar' => $recipient['email'],
-                        'email_subiect'    => $mail->subject,
-                        'email_mesaj'      => 'Notificare: Comentariile proiectului au fost actualizate.',
-                        'sent_at'          => now(),
-                        'error_code'       => $e->getCode(),
-                        'error_message'    => $e->getMessage(),
-                    ]);
-                }
-                $errors[] = "Nu s-a putut trimite emailul pentru comentarii: " . $e->getMessage();
-            }
-        }
+        // === STEP 3: Sync the relationships with the pivot data ===
+        $proiect->clienti()->sync($syncClienti);
 
         // Optionally, flash errors to the session so they can be displayed in your Blade view.
         if (!empty($errors)) {
@@ -565,23 +176,102 @@ class ProiectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,ProiectTip $proiectTip, Proiect $proiect)
+    public function destroy(Request $request, ProiectTip $proiectTip, Proiect $proiect)
     {
         // Check if the project has any attached files
         if ($proiect->fisiere()->exists()) {
             return redirect()->back()->with('error', 'Proiectul <strong>' . e($proiect->denumire_contract) . '</strong> nu poate fi șters deoarece are fișiere atașate.');
         }
 
-        // Delete all email logs associated with the project.
-        $proiect->emailuriTrimise()->delete();
-
         // Detach all related members and subcontractants from the pivot tables.
-        $proiect->membri()->detach();
-        $proiect->subcontractanti()->detach();
+        $proiect->clienti()->detach();
 
         // Delete the project.
         $proiect->delete();
 
         return back()->with('status', 'Proiectul <strong>' . e($proiect->denumire_contract) . '</strong> a fost șters cu succes!');
     }
+
+    /**
+     * Handle the “assign member to slot” form submit.
+     */
+    public function assignMember(Request $request, ProiectTip $proiectTip, Proiect $proiect)
+    {
+        // 1. Validate
+        $data = $request->validate([
+            'member_id'  => 'required|exists:membri,id',
+            'tip'  => 'required|string|max:255',
+            'observatii' => 'nullable|string|max:5000',
+        ]);
+
+        // 2. Create the pivot record
+        MembruProiect::create([
+            'membru_id'   => $data['member_id'],
+            'proiect_id'  => $proiect->id,
+            'tip'   => $data['tip'],
+            'observatii'  => $data['observatii'],
+        ]);
+
+        // 3. Redirect back with a flash message
+        return redirect()
+            ->back()
+            ->with('success', "Membru adăugat cu succes la “{$data['tip']}”.");
+    }
+
+    /**
+     * Update an existing project–member assignment.
+     */
+    public function membruModifica(
+        Request $request,
+        ProiectTip $proiectTip,
+        Proiect $proiect,
+        $pivotMembruProiectId
+    ) {
+        // 1. Validate input
+        $data = $request->validate([
+            'member_id'  => 'required|exists:membri,id',
+            'tip'        => 'required|string|max:255',
+            'observatii' => 'nullable|string|max:5000',
+        ]);
+
+        // 2. Fetch the existing pivot row (scoped to this project)
+        $assignment = MembruProiect::where('id', $pivotMembruProiectId)
+            ->where('proiect_id', $proiect->id)
+            ->firstOrFail();
+
+        // 3. Update it
+        $assignment->update([
+            'membru_id'   => $data['member_id'],
+            'tip'         => $data['tip'],
+            'observatii'  => $data['observatii'] ?? null,
+        ]);
+
+        // 4. Redirect with success
+        return redirect()
+            ->back()
+            ->with('success', "Membru actualizat cu succes la “{$data['tip']}”.");
+    }
+
+    /**
+     * Delete a project–member assignment.
+     */
+    public function membruSterge(
+        ProiectTip $proiectTip,
+        Proiect $proiect,
+        $pivotMembruProiectId
+    ) {
+        // 1. Fetch the assignment
+        $assignment = MembruProiect::where('id', $pivotMembruProiectId)
+            ->where('proiect_id', $proiect->id)
+            ->firstOrFail();
+
+        // 2. Delete it
+        $assignment->delete();
+
+        // 3. Redirect with success
+        return redirect()
+            ->back()
+            ->with('success', 'Membru șters cu succes.');
+    }
+
 }

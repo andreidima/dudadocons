@@ -11,7 +11,7 @@ import { clickOutside } from './directives/clickOut';
 // Import other components
 import VueDatepickerNext from './components/DatePicker.vue';
 import MembriSelector from './components/MembriSelector.vue';
-import SubcontractantiSelector from './components/SubcontractantiSelector.vue';
+import ClientiSelector from './components/ClientiSelector.vue';
 import DisableOnceButton from './components/DisableOnceButton.vue';
 
 
@@ -29,11 +29,11 @@ if (document.getElementById('membriSelectorApp') !== null) {
     membriSelectorApp.mount('#membriSelectorApp');
 }
 
-const subcontractantiSelectorApp = createApp({});
-subcontractantiSelectorApp.directive("click-out", clickOutside);
-subcontractantiSelectorApp.component('subcontractanti-selector', SubcontractantiSelector);
-if (document.getElementById('subcontractantiSelectorApp') !== null) {
-    subcontractantiSelectorApp.mount('#subcontractantiSelectorApp');
+const clientiSelectorApp = createApp({});
+clientiSelectorApp.directive("click-out", clickOutside);
+clientiSelectorApp.component('clienti-selector', ClientiSelector);
+if (document.getElementById('clientiSelectorApp') !== null) {
+    clientiSelectorApp.mount('#clientiSelectorApp');
 }
 
 const sendEmailModals = createApp({});

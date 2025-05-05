@@ -2,6 +2,13 @@
     font-size: 16px;
 }
 
+.smaller-875rem * {
+    font-size: .875rem !important;
+    /* 0.875rem = 14px if root is 16px */
+    line-height: 1.2
+        /* adjust as you like */
+}
+
 [v-cloak] {
     display: none !important;
 }
