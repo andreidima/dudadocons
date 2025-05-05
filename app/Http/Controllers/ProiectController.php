@@ -41,6 +41,7 @@ class ProiectController extends Controller
                     $q->where('nume', 'LIKE', "%{$searchClient}%");
                 });
             })
+            ->latest()
             ->simplePaginate(25);
 
         $membri = Membru::select('id','nume')->orderBy('nume')->get();
